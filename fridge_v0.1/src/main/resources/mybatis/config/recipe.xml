@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sql Mapper -->
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="recipe">
+   <resultMap type="rvo" id="recipeListRM">
+		<result property="recipeNo" column="recipe_no" />			
+		<result property="postDate" column="post_date" /> 
+		<result property="cookingTime" column="cooking_time"/> 
+		<result property="memberId" column="member_id"/>
+	</resultMap>
+   <resultMap type="ivo" id="ItemRM">
+		<result property="itemNo" column="item_no" />			
+		<result property="itemName" column="item_name" /> 
+	</resultMap>
+	 <select id="getRecipeList" resultMap="recipeListRM" >
+	select recipe_no,title,contents,post_date,nick,cooking_time,good,bad,hits,member_id from (select recipe_no,title,contents,post_date,nick,cooking_time,good,bad,hits,member_id,ceil(rownum/5) as page from(select recipe_no,title,contents,to_char(post_date,'YYYY.MM.DD') as post_date,nick,cooking_time,good,bad,hits,member_id from recipe order by recipe_no desc)) where page=#{value}
+   </select>
+   <select id="totalContent" resultType="int">
+		select count(*) from recipe
+	</select>
+  <insert id="insertRecipeItem" parameterType="rivo">
+    <selectKey keyProperty="foodReserves" resultType="int" order="BEFORE">
+		select food_reserves_seq.nextval from dual
+	</selectKey>  
+    insert into recipe_item (food_reserves,item_no,recipe_no) values (#{foodReserves},#{itemNo},#{recipeNo})
+   </insert> 
+  <insert id="insertItem" >
+    insert into item (item_no,item_name) values (item_no_seq.nextval,#{value}) 
+   </insert>
+
+ <select id="showRecipe" resultMap="recipeListRM"> 
+   select * from recipe where recipe_no=#{value}
+   </select> 
+    <select id="getCountItemNo" resultType="int">
+   select count(item_no) from item where item_name=#{value}
+   </select>
+ <select id="getItemNo" resultType="int">
+   select item_no from item where item_name=#{value}
+   </select>
+ <insert id="registerRecipe" parameterType="rvo">
+ 	 <selectKey keyProperty="recipeNo" resultType="int" order="BEFORE">
+ 		select recipe_seq.nextval from dual
+	</selectKey>
+ 	insert into recipe (recipe_no,title,contents,post_date,nick,cooking_time,good,bad,hits,member_id)
+ 	values(#{recipeNo},#{title},#{contents},sysdate,#{nick},#{cookingTime},0,0,0,#{memberId})
+ 	</insert>
+ 	
+ 	<select id="getRecipeItemList" resultType="string">
+ 		select item_no from recipe_item where recipe_no=#{value}
+ 	</select> 
+	<select id="getItemNameByItemNo" resultType="string">
+ 		select item_name from item where item_no=#{value}
+ 	</select> 
+ 	<!-- delete -->
+ 	
+ 	 <delete id="deleteRecipe">
+ 		delete recipe where recipe_no=#{value}
+ 	</delete> 
+ 	<delete id="deleteRecipeItem" >
+      delete recipe_item where recipe_no = #{value}
+   </delete>
+   <select id="getAllRecipeNo" resultType="string">
+   		select recipe_no from recipe
+   </select>
+  <update id="updateRecipe" parameterType="rvo" >
+      update recipe set title=#{title},contents=#{contents},cooking_time=#{cookingTime} where recipe_no=#{recipeNo}
+   </update>
+   <select id="getRecipeNoByItem" resultType="String">
+   		select r.recipe_no from recipe r,  (select recipe_no from recipe_item
+		where item_no=(select item_no from item where item_name=#{value})) t 
+		where r.recipe_no=t.recipe_no
+   </select>
+</mapper>
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
