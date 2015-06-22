@@ -9,8 +9,8 @@ import java.util.Set;
 import java.util.StringTokenizer;
 
 import javax.annotation.Resource;
-import javax.validation.constraints.Pattern.Flag;
 
+import org.dedeplz.fridge.controller.recipe.RecipeController;
 import org.dedeplz.fridge.model.recipe.paging.ListVO;
 import org.dedeplz.fridge.model.recipe.paging.PagingBean;
 import org.springframework.stereotype.Service;

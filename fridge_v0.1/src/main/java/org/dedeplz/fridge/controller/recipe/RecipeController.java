@@ -43,7 +43,7 @@ public class RecipeController {
 	@Resource(name = "recipeServiceImpl")
 	private RecipeService recipeService;
 	@Resource(name = "uploadPath")
-	private String path;
+	public String path;
 
 	/**
 	 * multiplePhotoUpload 메서드의 FileVO값을 저장

@@ -50,7 +50,7 @@
 	<tx:annotation-driven transaction-manager="transactionManager" />
 	<bean id="uploadPath" class="java.lang.String">
 		<constructor-arg>
-			<value>C:\\Users\\Ju\\git\\\fridge_dedeplz\\fridge_v0.1\\src\\main\\webapp\\photo_upload\\
+			<value>C:\\Users\\Ju\\git\\dedeplz_fridge\\fridge_v0.1\\src\\main\\webapp\\photo_upload\\
 			</value>
 		</constructor-arg>
 	</bean>	

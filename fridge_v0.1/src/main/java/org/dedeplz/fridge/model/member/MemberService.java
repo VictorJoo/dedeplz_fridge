@@ -1,6 +1,5 @@
 package org.dedeplz.fridge.model.member;
 
-import java.util.List;
 
 public interface MemberService {
 

@@ -212,7 +212,7 @@
 	            if(password2.length<4 || password2.length>10){
 	               $("#passwordCheckView").html("");
 	            }else if (password2!=password) {
-	               $("#passwordCheckView").html("비밀번호가 서로 같지 않습니다.");
+	               $("#passwordCheckView").html("비밀번호가 서로 같지 않습니다ssssssss.");
 	            }else if(password2==password){
 	               $("#passwordCheckView").html("확인 되었습니다.");
 	            }
@@ -281,9 +281,9 @@
 					$("#pass_error").html("");
 					var password = $("#password3").val();
 					if (password.length<4 || password.length>10) {
-						$("#passwordSizeView").html("비밀번호 4자이상 10자이하");
+						$("#passwordSizeUpdateView").html("비밀번호 4자이상 10자이하");
 					} else {
-						$("#passwordSizeView").html("");
+						$("#passwordSizeUpdateView").html("");
 					}
 				});//keyup Password1
 				$("#password4").keyup(function() {
@@ -291,11 +291,11 @@
 					var password = $("#password4").val();
 					var password2 = $("#password3").val();
 					if (password.length<4 || password.length>10) {
-						$("#passwordCheckView").html("");
+						$("#passwordCheckUdpateView").html("");
 					} else if (password2 != password) {
-						$("#passwordCheckView").html("비밀번호가 서로 같지 않습니다.");
+						$("#passwordCheckUdpateView").html("비밀번호가 서로 같지 않습니다.");
 					} else if (password2 == password) {
-						$("#passwordCheckView").html("일치합니다.");
+						$("#passwordCheckUdpateView").html("일치합니다.");
 					}
 				});
 
