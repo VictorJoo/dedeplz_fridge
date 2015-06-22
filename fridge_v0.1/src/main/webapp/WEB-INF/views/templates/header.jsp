@@ -112,7 +112,7 @@ function loginCheck() {
 				<h4 class="modal-title" id="exampleModalLabel">Login</h4>
 			</div>
 			<div class="modal-body">
-				<form method="get" action="member_login.do" id="registerForm">
+				<form method="get" action="member_login.do" id="loginForm">
 					<div class="form-group">
 						<label for="recipient-name" class="control-label">ID:</label> <input
 							type="text" name="id" class="form-control" id="memberId">

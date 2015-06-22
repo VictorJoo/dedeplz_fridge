@@ -151,6 +151,8 @@ public class RecipeController {
 	@RequestMapping("registerRecipe.do")
 	public ModelAndView registerRecipe(RecipeVO rvo, String items) {
 		System.out.println("에디터 결과");
+		System.out.println("rvo : " + rvo);
+		System.out.println("itmes : " + items);
 		int recipeNo = 0;
 		String pageNo = null;
 		String contents = rvo.getContents();
@@ -186,6 +188,7 @@ public class RecipeController {
 	@RequestMapping("registerResult.do")
 	public String registerResult(RecipeVO rvo, Model model) {
 		System.out.println(rvo.getRecipeNo());
+		System.out.println("rvo 를 찍습니다.: " + rvo);
 		rvo = recipeService.getRecipeInfo(rvo.getRecipeNo());
 		String tag = recipeService.getItemTag(rvo.getRecipeNo());
 		model.addAttribute("rvo", rvo);

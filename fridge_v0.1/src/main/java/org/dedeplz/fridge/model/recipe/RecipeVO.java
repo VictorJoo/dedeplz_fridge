@@ -7,8 +7,6 @@ public class RecipeVO {
 	private String postDate;
 	private String nick;
 	private int cookingTime;
-	private int good;
-	private int bad;
 	private int hits;
 	private String memberId;
 	public RecipeVO() {
@@ -16,8 +14,8 @@ public class RecipeVO {
 		// TODO Auto-generated constructor stub
 	}
 	public RecipeVO(int recipeNo, String title, String contents,
-			String postDate, String nick, int cookingTime, int good, int bad,
-			int hits, String memberId) {
+			String postDate, String nick, int cookingTime, int hits,
+			String memberId) {
 		super();
 		this.recipeNo = recipeNo;
 		this.title = title;
@@ -25,8 +23,6 @@ public class RecipeVO {
 		this.postDate = postDate;
 		this.nick = nick;
 		this.cookingTime = cookingTime;
-		this.good = good;
-		this.bad = bad;
 		this.hits = hits;
 		this.memberId = memberId;
 	}
@@ -66,18 +62,6 @@ public class RecipeVO {
 	public void setCookingTime(int cookingTime) {
 		this.cookingTime = cookingTime;
 	}
-	public int getGood() {
-		return good;
-	}
-	public void setGood(int good) {
-		this.good = good;
-	}
-	public int getBad() {
-		return bad;
-	}
-	public void setBad(int bad) {
-		this.bad = bad;
-	}
 	public int getHits() {
 		return hits;
 	}
@@ -94,8 +78,8 @@ public class RecipeVO {
 	public String toString() {
 		return "RecipeVO [recipeNo=" + recipeNo + ", title=" + title
 				+ ", contents=" + contents + ", postDate=" + postDate
-				+ ", nick=" + nick + ", cookingTime=" + cookingTime + ", good="
-				+ good + ", bad=" + bad + ", hits=" + hits + ", memberId="
-				+ memberId + "]";
-	}	
+				+ ", nick=" + nick + ", cookingTime=" + cookingTime + ", hits="
+				+ hits + ", memberId=" + memberId + "]";
+	}
+	
 }

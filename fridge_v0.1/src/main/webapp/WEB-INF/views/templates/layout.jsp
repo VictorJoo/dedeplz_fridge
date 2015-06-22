@@ -140,7 +140,7 @@
 		});//findMyPassBtn
 		
 		$("#loginBtn").click(function() {
-			$("#registerForm").submit();
+			$("#loginForm").submit();
 		});
 		
 	//회원가입
@@ -320,6 +320,7 @@
 	});//ready
 </script>
 <script type="text/javascript">
+//modal shocontents
 function testAlert(path) {
 	$.ajax({
 		type:"POST",

@@ -15,7 +15,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result property="itemName" column="item_name" /> 
 	</resultMap>
 	 <select id="getRecipeList" resultMap="recipeListRM" >
-	select recipe_no,title,contents,post_date,nick,cooking_time,good,bad,hits,member_id from (select recipe_no,title,contents,post_date,nick,cooking_time,good,bad,hits,member_id,ceil(rownum/5) as page from(select recipe_no,title,contents,to_char(post_date,'YYYY.MM.DD') as post_date,nick,cooking_time,good,bad,hits,member_id from recipe order by recipe_no desc)) where page=#{value}
+	select recipe_no,title,contents,post_date,nick,cooking_time,hits,member_id from (select recipe_no,title,contents,post_date,nick,cooking_time,hits,member_id,ceil(rownum/5) as page from(select recipe_no,title,contents,to_char(post_date,'YYYY.MM.DD') as post_date,nick,cooking_time,hits,member_id from recipe order by recipe_no desc)) where page=#{value}
    </select>
    <select id="totalContent" resultType="int">
 		select count(*) from recipe
@@ -43,8 +43,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  	 <selectKey keyProperty="recipeNo" resultType="int" order="BEFORE">
  		select recipe_seq.nextval from dual
 	</selectKey>
- 	insert into recipe (recipe_no,title,contents,post_date,nick,cooking_time,good,bad,hits,member_id)
- 	values(#{recipeNo},#{title},#{contents},sysdate,#{nick},#{cookingTime},0,0,0,#{memberId})
+ 	insert into recipe (recipe_no,title,contents,post_date,nick,cooking_time,hits,member_id)
+ 	values(#{recipeNo},#{title},#{contents},sysdate,#{nick},#{cookingTime},0,#{memberId})
  	</insert>
  	
  	<select id="getRecipeItemList" resultType="string">
