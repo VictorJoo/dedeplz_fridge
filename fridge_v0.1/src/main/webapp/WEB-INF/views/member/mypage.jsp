@@ -163,6 +163,7 @@
 					<div class="form-group">
 						<label for="message-text" class="control-label">Password:</label>
 						<input type="password" name="password" class="form-control">
+						<input type="hidden" name="id" value="${sessionScope.mvo.id}">
 					</div>	
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

@@ -56,22 +56,18 @@ public class RecipeController {
 	 */
 	@RequestMapping("home.do")
 	public ModelAndView home(String pageNo) {
-		System.out.println("home");
 		List<String> recipeNoList = recipeService.getAllRecipeNo();
-		System.out.println(recipeNoList);
-		 List<HashMap<String,Object>> fileLastNamePath = new ArrayList<HashMap<String,Object>>();
-		System.out.println(fileLastNamePath);
+		List<HashMap<String,Object>> fileLastNamePath = new ArrayList<HashMap<String,Object>>();
 		for (int i = 0; i < recipeNoList.size(); i++) {
 			String fileLastNo = recipeService.getFileLastNo(recipeNoList.get(i));
-			System.out.println(fileLastNo);
 			String fileLastPath = recipeService.getFileLastNamePath(fileLastNo);
-			System.out.println(fileLastPath);
 			 RecipeVO rvo=recipeService.getRecipeInfo(Integer.parseInt(recipeNoList.get(i)));
 			 String tag=recipeService.getItemTag(Integer.parseInt(recipeNoList.get(i)));
 			 HashMap<String, Object> map=new HashMap<String, Object>();
 	         map.put("rvo",rvo);
 	         map.put("fileLastPath", fileLastPath);
 	         map.put("tag", tag);
+	         map.put("count", recipeNoList.size());
 	         fileLastNamePath.add(map);
 		}
 		return new ModelAndView("home", "fileLastNamePath", fileLastNamePath);
@@ -83,16 +79,11 @@ public class RecipeController {
 	 */
     @RequestMapping("searchRecipe.do")
     public ModelAndView searchRecipe(String items){
-    	System.out.println("아이템 들어오나"+items);
     	List<String> recipeNoList = recipeService.getRecipeNoByItem(items);
-    	System.out.println("refipeNo 리스트: "+recipeNoList);
 		 List<HashMap<String,Object>> fileLastNamePath = new ArrayList<HashMap<String,Object>>();
-		System.out.println(fileLastNamePath);
 		for (int i = 0; i < recipeNoList.size(); i++) {
 			String fileLastNo = recipeService.getFileLastNo(recipeNoList.get(i));
-			System.out.println(fileLastNo);
 			String fileLastPath = recipeService.getFileLastNamePath(fileLastNo);
-			System.out.println(fileLastPath);
 			 RecipeVO rvo=recipeService.getRecipeInfo(Integer.parseInt(recipeNoList.get(i)));
 			 String tag=recipeService.getItemTag(Integer.parseInt(recipeNoList.get(i)));
 			 HashMap<String, Object> map=new HashMap<String, Object>();

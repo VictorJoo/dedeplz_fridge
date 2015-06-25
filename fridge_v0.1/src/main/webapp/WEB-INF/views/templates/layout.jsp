@@ -321,32 +321,39 @@
 </script>
 <script type="text/javascript">
 //modal shocontents
-function testAlert(path) {
-	$.ajax({
-		type:"POST",
-        url:"showRecipe.do",
-        data:"filePath="+path,   
-        dataType : 'json',
-        success:function(data){            
-        
-        if(data.rvo.memberId=="${sessionScope.mvo.id}"){
-        	$("#gogo").html(" <h2 class='heading'>"+data.rvo.title+"</h2><p>"+data.tag+"<br>요리시간 : "+data.rvo.cookingTime+"분</p><br>"
-           		 +data.rvo.contents
-         			+"<a class='btn btn-danger' href='updateForm.do?recipeNo="+data.rvo.recipeNo+"'>수정하기</a>  "
-                   +"<a class='btn btn-danger' href='deleteRecipe.do?recipeNo="+data.rvo.recipeNo+"'>삭제하기</a>  "
-           		  +"<button type='button' class='btn btn-primary' data-dismiss='modal'>"
-         			+"<i class='fa fa-times'></i> Close</button>");
-        }else{
-        	$("#gogo").html(" <h2 class='heading'>"+data.rvo.title+"</h2><p>"+data.tag+"<br>요리시간 : "+data.rvo.cookingTime+"분</p><br>"
-           		 +data.rvo.contents
-           		  +"<button type='button' class='btn btn-primary' data-dismiss='modal'>"
-         			+"<i class='fa fa-times'></i> Close</button>");
-        }
-          
-        }//callback         
-     });//ajax 
-	
-}
+	function testAlert(path) {
+		$.ajax({
+			type:"POST",
+	        url:"showRecipe.do",
+	        data:"filePath="+path,   
+	        dataType : 'json',
+	        success:function(data){            
+	        
+	        if(data.rvo.memberId=="${sessionScope.mvo.id}"){
+	        	$("#gogo").html(" <h2 class='heading'>"+data.rvo.title+"</h2><p>"+data.tag+"<br>요리시간 : "+data.rvo.cookingTime+"분</p><br>"
+	           		 +data.rvo.contents
+	         			+"<a class='btn btn-danger' href='updateForm.do?recipeNo="+data.rvo.recipeNo+"'>수정하기</a>  "
+	                   +"<a class='btn btn-danger' href='deleteRecipe.do?recipeNo="+data.rvo.recipeNo+"'>삭제하기</a>  "
+	           		  +"<button type='button' class='btn btn-primary' data-dismiss='modal'>"
+	         			+"<i class='fa fa-times'></i> Close</button>");
+	        }else{
+	        	$("#gogo").html(" <h2 class='heading'>"+data.rvo.title+"</h2><p>"+data.tag+"<br>요리시간 : "+data.rvo.cookingTime+"분</p><br>"
+	           		 +data.rvo.contents
+	           		  +"<button type='button' class='btn btn-primary' data-dismiss='modal'>"
+	         			+"<i class='fa fa-times'></i> Close</button>");
+	        }
+	          
+	        }//callback         
+	     });//ajax 
+		
+	}
+/* 
+	$(window).scroll(function(){ 
+		   if($(window).scrollTop() == $(document).height() - $(window).height()){ 
+			   alert("dd");
+		      $("#showMore").html("<input type='buttun' value='더보기'");
+		   } 
+		}); */
 </script>
 
 
