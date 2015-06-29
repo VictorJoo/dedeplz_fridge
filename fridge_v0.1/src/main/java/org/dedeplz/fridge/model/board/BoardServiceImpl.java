@@ -8,8 +8,6 @@ import javax.annotation.Resource;
 
 import org.dedeplz.fridge.model.board.paging.BoardListVO;
 import org.dedeplz.fridge.model.board.paging.PagingBean;
-import org.dedeplz.fridge.model.member.MemberVO;
-import org.dedeplz.fridge.model.recipe.RecipeDAO;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -3,7 +3,6 @@ package org.dedeplz.fridge.model.board;
 import java.util.List;
 
 import org.dedeplz.fridge.model.board.paging.BoardListVO;
-import org.dedeplz.fridge.model.member.MemberVO;
 
 public interface BoardService {
 

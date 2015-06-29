@@ -63,7 +63,6 @@ public class BoardController {
 	@RequestMapping("registerBoard.do")
 	public ModelAndView registerBoard(BoardVO bvo, String items) {
 		int boardNo = 0;
-		String pageNo = null;
 		String contents = bvo.getContents();
 		List<String> list = convertHtmlimg(contents);
 		List<FileVO> fvoList=new ArrayList<FileVO>();
