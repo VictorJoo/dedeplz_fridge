@@ -1,12 +1,13 @@
 package org.dedeplz.fridge.model.recipe;
 
 
+import java.util.HashMap;
 import java.util.List;
 
+import org.dedeplz.fridge.model.recipe.paging.FavoriteListVO;
 import org.dedeplz.fridge.model.recipe.paging.ListVO;
 
 public interface RecipeService {
-	public  ListVO getRecipeList(String pageNo);
 	public int getItemNo(String itemName);
 	public void insertRecipeItem(RecipeItemVO rivo);
 	public RecipeVO getRecipeInfo(int recipeNo);
@@ -26,6 +27,24 @@ public interface RecipeService {
 	public void deleteRecipeItem(int recipeNo);
 	public void insertRecipeItem(RecipeVO rvo, String items);
 	public List<String> getRecipeNoByItem(String items);
-	public Integer getTotalGood(int recipeNo);
+	public int getTotalGood(int recipeNo);
+	public int getTotalBad(int recipeNo);
+	public int getGood(HashMap<String, Object> map);
+	public int getBad(HashMap<String, Object> map);
+	public int getGoodAndBadNoCountByRecipeNoAndMemberId(HashMap<String, Object> map);
+	public void insertGood(HashMap<String, Object> map);
+	public void updateCancleGood(HashMap<String, Object> map);
+	public void updateUpGood(HashMap<String, Object> map);
+	public void insertBad(HashMap<String, Object> map);
+	public void updateCancleBad(HashMap<String, Object> map);
+	public void updateUpBad(HashMap<String, Object> map);
+	
+	public String registerFavorite(FavoriteVO fvo);
+	public FavoriteListVO getFavoriteRecipeList(String pageNo, String id);
+	public void deleteFavorite(FavoriteVO fvo);
+	
+	public RecipeVO getRecipeInfoNoHits(int recipeNo);
+	public int getFavoriteRecipe(HashMap<String,Object> map);
+	public List<Integer> getMyRecipeList(String id);
 	public List<String> getTopPointRecipeList();
 }

@@ -5,7 +5,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
-
+//MemberVO [id=java, password=1234, nick=abcd, name=한지민,
+//email=java@gmail.com, gender=0, answer=파스타, level=5, registerDate=null, love=0]
 public class MemberVO {
 	@Size(min=4,max=10)
    private String id;

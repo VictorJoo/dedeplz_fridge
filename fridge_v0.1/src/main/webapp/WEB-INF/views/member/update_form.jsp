@@ -25,10 +25,11 @@
                   <label for="inputPassword3" class="control-label">변경할 패스워드</label>
                 </div>
                 <div class="col-sm-3">                  
-                   <form:password class="form-control" path="password" id="password3" placeholder="Password"/>  					
+                   <form:password class="form-control" path="password" id="password3" placeholder="Password"/>
+  					 <font color="red"><form:errors id="pass_error" path="password"></form:errors></font>
+  						<span id="passwordSizeView"></span>
                 </div>
-                  <font color="red"><form:errors id="pass_error" path="password"></form:errors></font>
-  					<span id="passwordSizeUpdateView"></span>
+                 
               </div>
               
               <div class="form-group">
@@ -39,7 +40,7 @@
                   <input type="password" class="form-control" id="password4" placeholder="Password Check">
                 </div>
                 <font color="red"><form:errors id="pass_error" path="password"></form:errors></font>
-   				<span id="passwordCheckUdpateView"></span>
+   				<span id="passwordCheckView"></span>
               </div>
               <div class="form-group">
                 <div class="col-sm-3">

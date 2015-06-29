@@ -111,6 +111,8 @@
 									data-whatever="@getbootstrap">회원정보 수정</a>&nbsp;&nbsp;&nbsp;&nbsp;
 						<a class="btn btn-danger btn-sm"  data-toggle="modal" data-target="#deleteModal"
 									data-whatever="@getbootstrap">탈퇴</a>&nbsp;&nbsp;&nbsp;&nbsp;
+						<a class="btn btn-danger btn-sm"  href="${initParam.root}favoriteRecipeList.do" data-target="#favoriteList"
+                           data-whatever="@getbootstrap">즐겨찾기 리스트 관리</a>&nbsp;&nbsp;&nbsp;&nbsp;
 						<a class="btn btn-info btn-sm" id="gobackBtn">돌아가기</a><br><br><br><br>
 					</div>
 		</div>
@@ -159,11 +161,12 @@
 				<h4 class="modal-title" id="exampleModalLabel">비밀번호 확인</h4>
 			</div>
 			<div class="modal-body">
-				<form method="get" action="${initParam.root}member_passwordCheck_delete.do">					
+				<form method="get" action="${initParam.root}member_passwordCheck_delete.do">
+							
 					<div class="form-group">
 						<label for="message-text" class="control-label">Password:</label>
-						<input type="password" name="password" class="form-control">
 						<input type="hidden" name="id" value="${sessionScope.mvo.id}">
+						<input type="password" name="password" class="form-control">
 					</div>	
 					<div class="modal-footer">
 						<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

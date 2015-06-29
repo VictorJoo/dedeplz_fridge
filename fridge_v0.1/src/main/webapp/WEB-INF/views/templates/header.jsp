@@ -58,9 +58,21 @@ function loginCheck() {
 
 					<div class="col-lg-3 col-md-6 text-center">
 						<div class="service-box">
-							<i class="fa fa-2x fa-heart wow bounceIn" style="color:#FF5651"
-								data-wow-delay=".3s"></i>
-							<h5>즐겨찾기</h5>
+							 <c:choose>
+		                        <c:when test="${sessionScope.mvo==null}">
+		                           <a href="#" onclick="loginCheck();return false;">
+		                           <i class="fa fa-2x fa-heart wow bounceIn" style="color:#FF5651"
+		                           data-wow-delay=".3s"></i></a>
+		                        <h5><a href="#" onclick="loginCheck();return false;">즐겨찾기</a></h5>
+		                        </c:when>
+		                        <c:otherwise>
+		                           <a href="${initParam.root}favoriteView.do">
+		                           <i class="fa fa-2x fa-heart wow bounceIn" style="color:#FF5651"
+		                           data-wow-delay=".3s"></i></a>
+		                           <h5><a href="favoriteView.do">즐겨찾기</a></h5>
+		                        
+		                        </c:otherwise>
+		                  </c:choose>
 						</div>
 					</div>
 					<div class="col-lg-3 col-md-6 text-center">
