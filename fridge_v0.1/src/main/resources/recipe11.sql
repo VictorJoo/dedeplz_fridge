@@ -141,3 +141,31 @@ select file_name from recipe_file where recipe_no='55'
 
 select max(file_no) from recipe_file where recipe_no='147'
 select file_path from recipe_file where recipe_no='150'
+
+create table good_n_bad(
+   gnb_no number primary key,
+   good number default 0,
+   bad number default 0,
+   recipe_no number not null,
+   member_id varchar2(50) not null,
+   constraint fk_recipe_no_gnb foreign key(recipe_no) references recipe(recipe_no),
+   constraint fk_member_id_gnb foreign key(member_id) references member(member_id)
+);
+create sequence gnb_no_seq nocache;
+insert into good_n_bad(gnb_no,good,bad,recipe_no,member_id) values(gnb_no_seq.nextval,1,0,11,'victor');
+insert into good_n_bad(gnb_no,good,bad,recipe_no,member_id) values(gnb_no_seq.nextval,1,0,11,'java');
+insert into good_n_bad(gnb_no,good,bad,recipe_no,member_id) values(gnb_no_seq.nextval,1,0,11,'salad');
+insert into good_n_bad(gnb_no,good,bad,recipe_no,member_id) values(gnb_no_seq.nextval,1,0,11,'aa');
+insert into good_n_bad(gnb_no,good,bad,recipe_no,member_id) values(gnb_no_seq.nextval,1,0,12,'bb');
+insert into good_n_bad(gnb_no,good,bad,recipe_no,member_id) values(gnb_no_seq.nextval,1,0,20,'cc');
+insert into good_n_bad(gnb_no,good,bad,recipe_no,member_id) values(gnb_no_seq.nextval,1,0,21,'victor');
+insert into good_n_bad(gnb_no,good,bad,recipe_no,member_id) values(gnb_no_seq.nextval,1,0,13,'victor');
+-- 인기도 탑 3 --
+select count(good) point from good_n_bad where recipe_no=11 and good=1;
+select recipe_no from recipe where 
+select r.recipe_no from recipe r , good_n_bad gb
+select recipe_no from good_n_bad where order by point desc 
+select *, 
+
+
+

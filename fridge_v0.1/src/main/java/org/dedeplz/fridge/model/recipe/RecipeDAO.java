@@ -27,4 +27,5 @@ public interface RecipeDAO {
 	public List<String> getFileName(int recipeNo);
 	public void updateRecipe(RecipeVO rvo);
 	public List<String> getRecipeNoByItem(String item);
+	public Integer getTotalGood(int recipeNo);
 }

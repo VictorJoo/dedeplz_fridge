@@ -19,7 +19,7 @@ function loginCheck() {
 						<br><br>
 						 <a href="${initParam.root}home.do">
 						 <img src="img/투명3.jpg" width="250px"><br>
-						 <font face="billabong" size="7">Take care of my table</font>
+						 <font face="gabriola" size="7">Take care of my table</font>
 						 </a>
 							<%-- <a class="Headtitle" href="${initParam.root}home.do">Take care of my table</a> --%>
 						</h2>

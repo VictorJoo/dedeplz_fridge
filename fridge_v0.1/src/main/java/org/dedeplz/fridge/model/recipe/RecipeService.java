@@ -26,4 +26,6 @@ public interface RecipeService {
 	public void deleteRecipeItem(int recipeNo);
 	public void insertRecipeItem(RecipeVO rvo, String items);
 	public List<String> getRecipeNoByItem(String items);
+	public Integer getTotalGood(int recipeNo);
+	public List<String> getTopPointRecipeList();
 }

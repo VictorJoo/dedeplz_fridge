@@ -56,6 +56,7 @@ public class RecipeController {
 	 */
 	@RequestMapping("home.do")
 	public ModelAndView home(String pageNo) {
+		//전체 레시피 리스트
 		List<String> recipeNoList = recipeService.getAllRecipeNo();
 		List<HashMap<String,Object>> fileLastNamePath = new ArrayList<HashMap<String,Object>>();
 		for (int i = 0; i < recipeNoList.size(); i++) {
@@ -63,14 +64,39 @@ public class RecipeController {
 			String fileLastPath = recipeService.getFileLastNamePath(fileLastNo);
 			 RecipeVO rvo=recipeService.getRecipeInfo(Integer.parseInt(recipeNoList.get(i)));
 			 String tag=recipeService.getItemTag(Integer.parseInt(recipeNoList.get(i)));
+			 int goodPoint = recipeService.getTotalGood(Integer.parseInt(recipeNoList.get(i)));
 			 HashMap<String, Object> map=new HashMap<String, Object>();
 	         map.put("rvo",rvo);
 	         map.put("fileLastPath", fileLastPath);
 	         map.put("tag", tag);
-	         map.put("count", recipeNoList.size());
+	         map.put("goodPoint",goodPoint);
 	         fileLastNamePath.add(map);
 		}
-		return new ModelAndView("home", "fileLastNamePath", fileLastNamePath);
+		
+		//탑 3 레시피 리스트
+		List<String> topRecipeNoList = recipeService.getTopPointRecipeList();
+		System.out.println("탑 목록" + topRecipeNoList);
+		List<HashMap<String,Object>> topFileLastNamePath = new ArrayList<HashMap<String,Object>>();
+		for (int i = 0; i < topRecipeNoList.size(); i++) {
+			String fileLastNo = recipeService.getFileLastNo(topRecipeNoList.get(i));
+			String fileLastPath = recipeService.getFileLastNamePath(fileLastNo);
+			 RecipeVO rvo=recipeService.getRecipeInfo(Integer.parseInt(topRecipeNoList.get(i)));
+			 String tag=recipeService.getItemTag(Integer.parseInt(topRecipeNoList.get(i)));
+			 int goodPoint = recipeService.getTotalGood(Integer.parseInt(topRecipeNoList.get(i)));
+			 HashMap<String, Object> map=new HashMap<String, Object>();
+	         map.put("rvo",rvo);
+	         map.put("fileLastPath", fileLastPath);
+	         map.put("tag", tag);
+	         map.put("goodPoint",goodPoint);
+	         topFileLastNamePath.add(map);
+		}
+		
+		
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("recipeNoList", recipeNoList.size());
+		resultMap.put("filePath",fileLastNamePath);
+		resultMap.put("topFileInfo", topFileLastNamePath);
+		return new ModelAndView("home", "total", resultMap);
 	}
 	/**
 	 * 레시피 검색
@@ -86,13 +112,18 @@ public class RecipeController {
 			String fileLastPath = recipeService.getFileLastNamePath(fileLastNo);
 			 RecipeVO rvo=recipeService.getRecipeInfo(Integer.parseInt(recipeNoList.get(i)));
 			 String tag=recipeService.getItemTag(Integer.parseInt(recipeNoList.get(i)));
+			 int goodPoint = recipeService.getTotalGood(Integer.parseInt(recipeNoList.get(i)));
 			 HashMap<String, Object> map=new HashMap<String, Object>();
 	         map.put("rvo",rvo);
 	         map.put("fileLastPath", fileLastPath);
 	         map.put("tag", tag);
+	         map.put("goodPoint",goodPoint);
 	         fileLastNamePath.add(map);
 		}
-		return new ModelAndView("home", "fileLastNamePath", fileLastNamePath);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("recipeNoList", recipeNoList.size());
+		resultMap.put("filePath",fileLastNamePath);
+		return new ModelAndView("home", "total", resultMap);
     }
 	/**
 	 * 레시피 상세 정보 보기

@@ -11,7 +11,6 @@ public class RecipeVO {
 	private String memberId;
 	public RecipeVO() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 	public RecipeVO(int recipeNo, String title, String contents,
 			String postDate, String nick, int cookingTime, int hits,

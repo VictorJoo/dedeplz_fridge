@@ -3,15 +3,26 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <script>
-	var page =0;
- function showMore(count) {
-	count = count+20;
-	var pageNo = page+1;
-	$("#showMore"+page).html("<input type='button' value='더보기' onclick='showMore("+count+")'>"
-			+"<div id=showMore"+pageNo+"></div>");		
-	page = page + 1;
-} 
+var count= 20;
+var maxCount=40;
+ function show(){
+	 if("${total.recipeNoList < maxCount}"==true){
+		 maxCount = "${total.recipeNoList}";
+	 }else{
+		 maxCount = count+20;
+		 if("${total.recipeNoList}" < maxCount){
+			var test = document.getElementById("showBtn");
+			test.innerHTML=" ";
+		 }
+	 }
+	 
+	 for (var i = count; i < maxCount; i++) {
+	     var recipe = document.getElementById("recipe"+i);
+	     recipe.style.display='';
+		}
+	 count = count+20;
 
+   }
 </script>
 
 
@@ -26,39 +37,73 @@
 		</div>
 	</div>
 </form>
-	
+
+	<!-- 인기도 top3 요리 목록 -->
+	<c:forEach var="topPath" items="${requestScope.total.topFileInfo}">
+	<div class="col-md-4 col-sm-6" style=" padding: 0px; height: auto;">
+		<a href="#portfolioModal1" class="portfolio-box" data-toggle="modal" onclick="testAlert('${topPath.fileLastPath}')" > 
+		<img src="${topPath.fileLastPath}" class="img-responsive" style="width: 500px; height: 300px;">
+			<div class="portfolio-box-caption">
+				<div class="portfolio-box-caption-content">
+					<div class="project-category text-faded">
+					${topPath.rvo.nick }님의 recipe
+					</div>
+					<div class="project-name">${topPath.rvo.title}
+					</div>
+					<div>
+					조회수 : ${topPath.rvo.hits }  <img src="img/love2.jpg"> ${topPath.goodPoint}
+					</div>
+				</div>
+			</div>
+		</a> 
+	</div>
+</c:forEach>
+
 	<!--요리 목록 -->
 <c:set var="recipeCount" value="19" />
 <c:set var="count" value="0"/>
-<c:forEach var="path" items="${requestScope.fileLastNamePath}"	end="${recipeCount}">
-	<div class="col-md-3 col-sm-6">
-		<a href="#portfolioModal1" class="portfolio-box" data-toggle="modal" onclick="testAlert('${path.fileLastPath}')"> 
+<c:forEach var="path" items="${requestScope.total.filePath}">
+	<c:choose>
+		<c:when test="${count<20}">
+			<div class="col-md-3 col-sm-6" id="recipe${count}" style="padding: 0px;">
+		</c:when>
+		<c:otherwise>
+			<div class="col-md-3 col-sm-6" id="recipe${count}" style="display: none; padding: 0px">
+		</c:otherwise>
+	</c:choose>
+	
+
+	<c:set var="count" value="${count+1}"/>
+		<a href="#portfolioModal1" class="portfolio-box" data-toggle="modal" onclick="testAlert('${path.fileLastPath}')" > 
 		<img src="${path.fileLastPath}" class="img-responsive" style="width: 350px; height: 220px;">
 			<div class="portfolio-box-caption">
 				<div class="portfolio-box-caption-content">
 					<div class="project-category text-faded">
-					${path.rvo.nick }님의	요리
+					${path.rvo.nick }님의	recipe
 					</div>
-					<div class="project-name">${path.rvo.title }
+					<div class="project-name">${path.rvo.title}
 					</div>
-					조회수 : ${path.rvo.hits }
+					<div>
+					조회수 : ${path.rvo.hits }  <img src="img/love2.jpg"> ${path.goodPoint}
+					</div>
 				</div>
 			</div>
-		</a> <br>
+		</a> 
 	</div>
-	<c:set var="count" value="${path.count}"/>
 </c:forEach>
 
 <c:if test="${recipeCount < count}">
 	<center>
-
-	<input type="button" value="더보기" id="showMoreRecipe" onclick="showMore(${recipeCount})" >
-
+		<div class="row" >
+          <div class="col-md-12" id= "showBtn">
+          <br><br><br>
+          <input type="image" src="img/showMore.jpg" onclick="show(${recipeCount})">		
+          <br><br><br>	
+          </div>
+        </div>
 	</center>
 </c:if>
-<div id="showMore0">
 
-</div>
 
 
 <!-- showcontent -->

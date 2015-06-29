@@ -201,4 +201,11 @@ public class RecipeDAOImpl implements RecipeDAO {
 	public List<String> getRecipeNoByItem(String item) {		
 		return sqlSessionTemplate.selectList("recipe.getRecipeNoByItem",item);
 	}
+	/**
+	    * 해당 레시피에 해당하는 모든 good을 리스트로 받아온다
+	    */
+   @Override
+   public Integer getTotalGood(int recipeNo) {
+      return sqlSessionTemplate.selectOne("recipe.getTotalGood",recipeNo);
+   }
 }

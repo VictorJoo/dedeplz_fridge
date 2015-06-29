@@ -72,6 +72,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		where item_no=(select item_no from item where item_name=#{value})) t 
 		where r.recipe_no=t.recipe_no
    </select>
+
+   <select id="getTotalGood" resultType="int">
+         select count(good) from good_n_bad where recipe_no=#{value} and good=1
+   </select>
+    <select id="getTotalBad" resultType="int">
+         select count(bad) from good_n_bad where recipe_no=#{value} and bad=1
+   </select>
+   
 </mapper>
  
  
