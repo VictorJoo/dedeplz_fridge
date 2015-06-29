@@ -70,8 +70,8 @@ a:hover,
 a:focus {
     color: #eb3812;
 }
-a.nomal{
-	color: #010003;
+.nomal {
+	color: #000000;
 }
 a.Headtitle{
 	font-family: "Kaushan Script","Helvetica Neue",Helvetica,Arial,cursive;

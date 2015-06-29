@@ -553,6 +553,57 @@ img#badImg {
 					//}
 	            });//즐겨찾기 클릭 이벤트
 	            
+	          //board 등록
+	    		$("#registerBoard").click(function(){
+	    				 obj.getById["contents"].exec("UPDATE_CONTENTS_FIELD", []); 
+	    				 var info = $("#contents").val().indexOf("<img");
+	    				  if($("#category").val()==""){
+	    			            alert("카테고리를 입력하세요");
+	    			            return false;
+	    				  } else if($("#title").val()==""){
+	    		            alert("제목을 입력하세요");
+	    		            return false;
+	    		         } 
+	    		         $("#registerBoardForm").submit();
+	    		       
+	    			 });
+	    		//board 수정
+	    		$("#updateBoardBtn").click(function(){
+	                if($("#category").val()==""){
+	                     alert("말머리를 선택하세요!");
+	                     return false;
+	                  }
+	                obj.getById["contents"].exec("UPDATE_CONTENTS_FIELD", []);
+	                $("#updateBoard").submit();
+	            });
+	    		//취소 버튼
+	            $("#cancleBoardBtn").click(function(){
+	                  location.href="${initParam.root}BoardList.do";
+	               });
+	            //제목,글쓴이,내용 별 검색
+	            $("#searchBtn").click(function(){
+	               var searchCategory=$("#searchCategory").val();
+	               //var searchContent=$("#searchContent").val();
+	               if(searchCategory=='title'){
+	                  location.href="${initParam.root}searchByTitle.do?title="+$("#searchContent").val();
+	               }else if(searchCategory=='writer'){
+	                  location.href="${initParam.root}searchByWriter.do?nick="+$("#searchContent").val();
+	               }else if(searchCategory=='contents'){
+	                  location.href="${initParam.root}searchByContents.do?contents="+$("#searchContent").val();
+	               }else if(searchCategory==""){
+	                  alert("검색 조건을 선택하세요!");
+	               }
+	            });
+	            //카테고리 별 검색
+	            $("#searchByCategoryBtn").click(function(){
+	            	var category=$("#category").val();
+	            	if(category=='all'){
+	            location.href="${initParam.root}BoardList.do";
+	            	}else{
+	            		  location.href="${initParam.root}searchByCategory.do?category="+category;
+	            	}
+	            });
+	            
    });//ready
    //댓글 팝업
    $(document).on("click","#commentPopUp",function(){

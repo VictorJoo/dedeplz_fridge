@@ -116,13 +116,19 @@ public class RecipeController {
 			String fileLastPath = recipeService.getFileLastNamePath(fileLastNo);
 			 RecipeVO rvo=recipeService.getRecipeInfoNoHits(Integer.parseInt(recipeNoList.get(i)));
 			 String tag=recipeService.getItemTag(Integer.parseInt(recipeNoList.get(i)));
+			 int goodPoint = recipeService.getTotalGood(Integer.parseInt(recipeNoList.get(i)));
 			 HashMap<String, Object> map=new HashMap<String, Object>();
 	         map.put("rvo",rvo);
 	         map.put("fileLastPath", fileLastPath);
 	         map.put("tag", tag);
+	         map.put("goodPoint",goodPoint);
 	         fileLastNamePath.add(map);
 		}
-		return new ModelAndView("home", "fileLastNamePath", fileLastNamePath);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("recipeNoList", recipeNoList.size());
+		resultMap.put("filePath",fileLastNamePath);
+
+		return new ModelAndView("home", "total", resultMap);
     }
 	/**
 	 * 레시피 상세 정보 보기
