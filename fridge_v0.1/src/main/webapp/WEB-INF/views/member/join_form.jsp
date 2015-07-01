@@ -108,7 +108,7 @@
           </div>
           <div class="col-md-12 text-center">
                 <button class="btn btn-info btn-sm" id="submitBtn">회원가입</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                <a class="btn btn-danger btn-sm" id="cancelBtn">취소</a>
+                <a class="btn btn-danger btn-sm" id="cancelBtn">취소</a><br><br><br><br>
               </div>  
         </div>
       </div>

@@ -284,5 +284,6 @@ function checkForm(){
  <input type="checkbox"  name="agree2" value="약관2동의"> 개인정보수집이용안내의 내용에 동의합니다.  <br><br><br>
    <input type="button" value="확인" onclick="checkForm()">
    <input type="button" value="취소" id="cancelBtn">
+   <br><br><br><br>
 </form>
 </center>

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.dedeplz.fridge.controller.member.LoginCheck;
+import org.dedeplz.fridge.common.LoginCheck;
 import org.dedeplz.fridge.model.board.BoardService;
 import org.dedeplz.fridge.model.board.BoardVO;
 import org.dedeplz.fridge.model.board.FileVO;

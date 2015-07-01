@@ -16,12 +16,10 @@ public interface RecipeDAO {
 	public void insertRecipeFile(FileVO fvo);
 	public List<String> getItemNoList(int recipeNo);
 	public String getItemNameByItemNo(int itemNo);
-	public List<String> getFilePath(int recipeNo);
 	public void deleteRecipe(int recipeNo);
 	public void deleteRecipeItem(int recipeNo);
 	public void deleteRecipeFile(int recipeNo);
 	public List<String> getAllRecipeNo();
-	public String getFileLastNo(String recipeNo);
 	public String getFileLastNamePath(String fileLastNo);
 	public int getRecipeNoByPath(String filePath);
 	public List<String> getAllFilePahtByRecipeNo(int recipeNo);
@@ -50,4 +48,5 @@ public interface RecipeDAO {
 	public int getFavoriteRecipe(HashMap<String,Object> map);
 	public int getFavoriteNoAllList(int recipeNo);
 	public void deleteFavorites(int recipeNo);
+	public int getCountOfCommentByRecipeNo(int recipeNo);
 }

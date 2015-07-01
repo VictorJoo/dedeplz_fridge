@@ -38,7 +38,36 @@ var maxCount=40;
 	</div>
 </form>
 
+	<c:if test="${total.recipeNoList==0}">
+	<div class="cover">
+		<div class="cover-image"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<br>				<br>				<br>				<br>
+					<h1>검색 결과가 없습니다.</h1>
+					<br>
+					<h4>
+						<br>자신만의 새로운 RECIPE를 만들어 보세요!
+					</h4>
+					<br> 
+						<c:choose>
+								<c:when test="${sessionScope.mvo==null}">
+								 <a class="btn btn-lg btn-success" href="#"  onclick="loginCheck();return false;">YOURs NEW RECIPE!</a>
+								</c:when>
+								<c:otherwise>
+								<a class="btn btn-lg btn-success" href="${initParam.root}registerRecipeForm.do">YOURs NEW RECIPE!</a>
+								</c:otherwise>
+							</c:choose>
+						<br><br><br><br><br><br><br>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	</c:if>
 	<!-- 인기도 top3 요리 목록 -->
+	<c:set var="topCount" value="0"/>
 	<c:forEach var="topPath" items="${requestScope.total.topFileInfo}">
 	<div class="col-md-4 col-sm-6" style=" padding: 0px; height: auto;">
 		<a href="#portfolioModal1" class="portfolio-box" data-toggle="modal" onclick="testAlert('${topPath.fileLastPath}')" > 
@@ -46,12 +75,16 @@ var maxCount=40;
 			<div class="portfolio-box-caption">
 				<div class="portfolio-box-caption-content">
 					<div class="project-category text-faded">
+					<c:set var="topCount" value="${topCount+1 }"/>
+					${topCount }위 <br>
 					${topPath.rvo.nick }님의 recipe
 					</div>
 					<div class="project-name">${topPath.rvo.title}
 					</div>
 					<div>
-					조회수 : ${topPath.rvo.hits }  <img src="img/love2.jpg"> ${topPath.goodPoint}
+					<br>
+					 <img src="img/comment.jpg"> ${topPath.commentCount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					 <img src="img/love.jpg"> ${topPath.goodPoint}
 					</div>
 				</div>
 			</div>
@@ -84,7 +117,9 @@ var maxCount=40;
 					<div class="project-name">${path.rvo.title}
 					</div>
 					<div>
-					조회수 : ${path.rvo.hits }  <img src="img/love2.jpg"> ${path.goodPoint}
+					<br>
+					<img src="img/comment.jpg"> ${path.commentCount} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<img src="img/love.jpg"> ${path.goodPoint}
 					</div>
 				</div>
 			</div>

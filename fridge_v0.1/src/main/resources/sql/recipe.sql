@@ -93,6 +93,7 @@ create table favorites(
 )
 drop sequence favorites_no_seq;
 create sequence favorites_no_seq nocache;
+select * from favorites;
 
 -- 인기도 탑 3 --
 select count(good) point from good_n_bad where recipe_no=11 and good=1;
@@ -101,5 +102,22 @@ select r.recipe_no from recipe r , good_n_bad gb
 select recipe_no from good_n_bad where order by point desc 
 select *, 
 
+-- 레시피의 댓글 테이블 생성 sql -- 
+create table recipe_comment(
+	comment_no  number  primary key,
+	comment_ref  number   not null,
+	comment_group  number   not null,
+	comment_level  number  default 0,
+	comment_contents  clob   not null,
+	comment_time date  not null,
+	comment_nick   varchar2(30)   not null,
+	comment_recipe_no number   not null ,
+	comment_ref_nick varchar2(30) not null
+)
+drop table recipe_comment
+create sequence recipe_comment_seq nocache;
+drop sequence recipe_comment_seq;
+select * from recipe_comment;
+select count(*) from recipe_comment where comment_recipe_no=27;
 
-
+select count(*) from recipe_comment where comment_recipe_no=11;

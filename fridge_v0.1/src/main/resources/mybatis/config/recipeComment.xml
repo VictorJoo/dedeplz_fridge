@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sql Mapper -->
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="recipeComment">
+	<resultMap type="rcvo" id="recipeCommentRM">
+		<result property="commentNo" column="comment_no" />
+		<result property="commentRef" column="comment_ref" />
+		<result property="commentGroup" column="comment_group" />
+		<result property="commentLevel" column="comment_level" />
+		<result property="commentContents" column="comment_contents" />
+		<result property="commentTime" column="comment_time" />
+		<result property="commentNick" column="comment_nick" />
+		<result property="commentRecipeNo" column="comment_recipe_no" />
+		<result property="commentRefNick" column="comment_ref_nick" />
+	</resultMap>
+
+	<insert id="insertComment" parameterType="rcvo">
+		<selectKey keyProperty="commentNo" resultType="int" order="BEFORE">
+			select recipe_comment_seq.nextval from dual
+		</selectKey>
+		insert into recipe_comment
+		(comment_no,comment_ref,comment_group,comment_level,comment_contents,comment_time,comment_nick,comment_recipe_no,comment_ref_nick)
+		values
+		(#{commentNo},#{commentNo},#{commentNo},0,#{commentContents},sysdate,#{commentNick},#{commentRecipeNo},#{commentNick})
+	</insert>
+
+	<select id="getCommentInfoByCommentNo" resultMap="recipeCommentRM">
+		select * from recipe_comment where comment_no=#{value}
+	</select>
+	<select id="getCommentRecipeList" resultMap="recipeCommentRM"
+		>
+		select comment_no, comment_ref,
+		comment_group,comment_level,comment_contents,comment_time,
+		comment_nick,comment_recipe_no,comment_ref_nick
+		FROM (
+		SELECT comment_no, comment_ref, comment_group,comment_level,
+		comment_contents,comment_time, comment_nick,comment_recipe_no,
+		comment_ref_nick FROM recipe_comment order by comment_time asc
+		) where comment_recipe_no=#{value}
+	</select>
+	<select id="totalCommentByRecipeNo" resultType="int">
+		select count(*) from recipe_comment where comment_recipe_no=#{value}
+	</select>
+	<insert id="insertRecomment">
+	<selectKey keyProperty="commentNo" resultType="int" order="BEFORE">
+			select recipe_comment_seq.nextval from dual
+		</selectKey>
+		insert into recipe_comment
+		(comment_no,comment_ref,comment_group,comment_level,comment_contents,comment_time,comment_nick,comment_recipe_no,comment_ref_nick)
+		values
+		(#{commentNo},#{commentNo},#{commentNo},#{commentLevel},#{commentContents},sysdate,#{commentNick},#{commentRecipeNo},#{commentNick})
+	</insert>
+	
+	<select id="getCountOfCommentByRecipeNo" resultType="int">
+		select count(*) from recipe_comment where comment_recipe_no=#{value}
+	</select>
+</mapper>
+
+ 

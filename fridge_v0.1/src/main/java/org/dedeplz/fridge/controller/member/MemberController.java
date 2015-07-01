@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
+import org.dedeplz.fridge.common.LoginCheck;
 import org.dedeplz.fridge.model.member.MemberService;
 import org.dedeplz.fridge.model.member.MemberVO;
 import org.dedeplz.fridge.model.recipe.RecipeService;
@@ -253,7 +254,7 @@ public class MemberController {
          } else{
             List<Integer> list=recipeService.getMyRecipeList(mvo.getId());
             for(int i=0;i<list.size();i++){
-               recipeService.deleteRecipeAll(list.get(i));
+               recipeService.deleteRecipeAll(mvo.getId(),list.get(i));
             }
             memberService.deleteMember(mvo);
          }

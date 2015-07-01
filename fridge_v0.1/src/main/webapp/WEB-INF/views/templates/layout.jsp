@@ -246,7 +246,7 @@ img#badImg {
              if(idchecked==true){
                 $("#regForm").submit();
              }else{
-                alert("아이디 체크부탁");
+                alert("ID 체크를 먼저 해주시길 바랍니다.");
              }
           });
          
@@ -607,8 +607,8 @@ img#badImg {
    });//ready
    //댓글 팝업
    $(document).on("click","#commentPopUp",function(){
-      window.open("recipeCommentForm.do", "popup",
-     "width=200,height=200,top=150,left=400");
+      window.open("getCommentRecipeList.do?commentRecipeNo="+$("#gnbUseRecipeNo").val(), "popup",
+     "width=600,height=500,top=60,left=450");
         return false;
         });//댓글 팝업_submit
         
@@ -623,35 +623,50 @@ function testAlert(path) {
         success:function(data){     
         	totalGood=data.totalGood;
         	totalBad=data.totalBad;
-        	
+        //비회원
         $("#gogo").html(" <h2 class='heading'>"+data.rvo.title+"</h2><p>"+data.tag+"<br>요리시간 : "+data.rvo.cookingTime+"분  조회수 : " +data.rvo.hits+"</p>"
                 +data.rvo.contents
         			+"<span id='totalGood' value='"+data.totalGood+"' style='font-size: 20px;'><img src='${initParam.root}/img/추천.jpg' id='goodImg'>&nbsp;&nbsp;"+data.totalGood+"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
         			+"<span id='totalBad' value='"+data.totalBad+"' style='font-size: 20px;'><img src='${initParam.root}/img/비추천.jpg' id='badImg'>&nbsp;&nbsp;"+data.totalBad+"</span><br><br>"
-        			 +"<a button type='button' class='btn btn-success'   id='commentPopUp' >댓글달기</a>  "	
         			+"<input type='hidden' id='gnbUseRecipeNo' value='"+data.rvo.recipeNo+"'>"
         			+"<input type='hidden' id='gnbUseMemberId' value='"+data.rvo.memberId+"'>"	
         );
+        //자기자신의 글
         if("${sessionScope.mvo.id}"!=""&&data.rvo.memberId=="${sessionScope.mvo.id}"){
            $("#gogo").append("<a class='btn btn-danger' href='updateForm.do?recipeNo="+data.rvo.recipeNo+"'>수정하기</a>  "
                    +"<a class='btn btn-danger' href='deleteRecipe.do?recipeNo="+data.rvo.recipeNo+"'>삭제하기</a>  "   
-                   +"<button type='button' class='btn btn-primary' data-dismiss='modal'>"
-                  +"<i class='fa fa-times'></i> Close</button>");
-        }else if("${sessionScope.mvo.id}"!=""&&data.rvo.memberId!="${sessionScope.mvo.id}"){
-
-        	if(data.favoriteInfo==0){
-	           $("#gogo").append(
-	        		"<button type='button' class='btn btn-primary' data-dismiss='modal'>"+"<i class='fa fa-times'></i> Close</button><br><br>"
-	        		+ "<div id='favoriteView'><img src='${initParam.root}/img/empty_star.png' id='favoriteImg1'width='50' height='50'></div>"	
+                   +"<a button type='button' class='btn btn-success'   id='commentPopUp' >댓글달기</a>  "	
+			);
+           if(data.favoriteInfo==0){
+	           $("#gogo").append(	        	
+	        		"<br><br><div id='favoriteView'><img src='${initParam.root}/img/empty_star.png' id='favoriteImg1'width='50' height='50'></div>"	
 	           );
         	}else{
-        		  $("#gogo").append(
-      	        		"<button type='button' class='btn btn-primary' data-dismiss='modal'>"+"<i class='fa fa-times'></i> Close</button><br><br>"
-      	        		+ "<div id='favoriteView'><img src='${initParam.root}/img/full_star.png' id='favoriteImg2'></div>"	
+        		  $("#gogo").append(      	        		
+	          		"<br><br><div id='favoriteView'><img src='${initParam.root}/img/full_star.png' id='favoriteImg2'></div>"	
+      	           );        		
+        	}   
+          //회원
+        }else if("${sessionScope.mvo.id}"!=""&&data.rvo.memberId!="${sessionScope.mvo.id}"){
+        	$("#gogo").append(
+        			 "<a button type='button' class='btn btn-success'   id='commentPopUp' >댓글달기</a>  "	
+        	  );
+        	if(data.favoriteInfo==0){
+	           $("#gogo").append(	        		
+       				"<br><br><div id='favoriteView'><img src='${initParam.root}/img/empty_star.png' id='favoriteImg1'width='50' height='50'></div>"	
+	           );
+        	}else{
+        		  $("#gogo").append(      	        		
+        			"<br><br><div id='favoriteView'><img src='${initParam.root}/img/full_star.png' id='favoriteImg2'></div>"	
       	           );
         		
         	}   
         }
+        $("#gogo").append(
+        		 "<button type='button' class='btn btn-primary' data-dismiss='modal'>"
+                 +"<i class='fa fa-times'></i> Close</button>"	
+	           );
+        
         }//callback         
      });//ajax 
 
