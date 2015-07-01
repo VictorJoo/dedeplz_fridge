@@ -252,9 +252,9 @@ public class MemberController {
          if (mvo == null) {
             return "member_password_check_fail";
          } else{
-            List<Integer> list=recipeService.getMyRecipeList(mvo.getId());
+            List<String> list=recipeService.getMyRecipeList(mvo.getId());
             for(int i=0;i<list.size();i++){
-               recipeService.deleteRecipeAll(mvo.getId(),list.get(i));
+               recipeService.deleteRecipeAll(mvo.getId(),Integer.parseInt(list.get(i)));
             }
             memberService.deleteMember(mvo);
          }

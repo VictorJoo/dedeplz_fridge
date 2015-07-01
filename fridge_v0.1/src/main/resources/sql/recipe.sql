@@ -118,6 +118,5 @@ drop table recipe_comment
 create sequence recipe_comment_seq nocache;
 drop sequence recipe_comment_seq;
 select * from recipe_comment;
-select count(*) from recipe_comment where comment_recipe_no=27;
 
-select count(*) from recipe_comment where comment_recipe_no=11;
+select recipe_no from recipe where member_id='java';

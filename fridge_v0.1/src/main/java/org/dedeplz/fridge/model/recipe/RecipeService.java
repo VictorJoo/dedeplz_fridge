@@ -27,7 +27,7 @@ public interface RecipeService {
 	
 	public RecipeVO getRecipeInfoNoHits(int recipeNo);
 	public int getFavoriteRecipe(HashMap<String,Object> map);
-	public List<Integer> getMyRecipeList(String id);
+	public List<String> getMyRecipeList(String id);
 	
 	//수정 수선대로
 	public List<HashMap<String, Object>> getFileLastNamePath();
@@ -38,7 +38,7 @@ public interface RecipeService {
 	public void updateGood(String memberId, int recipeNo,String goodCase);
 	public void updateBad(String memberId, int recipeNo, String badCase);
 	public HashMap<String, Object> checkGoodAndBad(String memberId, int recipeNo);
-	public List<HashMap<String, Object>> getFavoriteInfo(String pageNo,
-			MemberVO mvo);
+	public List<HashMap<String, Object>> getFavoriteInfo(MemberVO mvo);
+	public Map<String, Object> getMyRecipeInfo(String id);
 	
 }

@@ -72,14 +72,24 @@ img#badImg {
                      <li><a class="page-scroll" href="#portfolio">Search</a></li>
                   </c:when>
                   <c:otherwise>
-                     <li><a class="page-scroll" href="#">${sessionScope.mvo.nick}님
-                           접속중</a></li>
-                     <li><a class="page-scroll"
-                        href="${initParam.root}member_mypage.do">MyPage</a></li>
+                  <li>
+	                  <a class="page-scroll dropdown-toggle" data-toggle="dropdown">
+	                   ${sessionScope.mvo.nick}님 접속중 <span class="fa fa-caret-down"></span></a>
+			              <ul class="dropdown-menu" role="menu">			                
+	                       	<li><a class="page-scroll"
+                       		 href="${initParam.root}member_mypage.do">MyPage</a></li>
+                   		  	<li><a class="page-scroll"
+	                        href="${initParam.root}getMyRecipeInfo.do">My Recipe</a></li>	  
+                        	<li><a class="page-scroll"
+	                        href="${initParam.root}favoriteView.do">즐겨 찾기</a></li>                   
+		              	</ul>
+		              </li>                    
                      <li><a class="page-scroll"
                         href="${initParam.root}registerRecipeForm.do">New Recipe</a></li>
                      <li><a class="page-scroll"
                         href="${initParam.root}member_logout.do">logout</a></li>
+                        
+                        
                      <c:choose>
                         <c:when test="${sessionScope.mvo.level=='6' }">
                            <li><a class="page-scroll"
@@ -632,36 +642,30 @@ function testAlert(path) {
         			+"<input type='hidden' id='gnbUseMemberId' value='"+data.rvo.memberId+"'>"	
         );
         //자기자신의 글
-        if("${sessionScope.mvo.id}"!=""&&data.rvo.memberId=="${sessionScope.mvo.id}"){
-           $("#gogo").append("<a class='btn btn-danger' href='updateForm.do?recipeNo="+data.rvo.recipeNo+"'>수정하기</a>  "
-                   +"<a class='btn btn-danger' href='deleteRecipe.do?recipeNo="+data.rvo.recipeNo+"'>삭제하기</a>  "   
-                   +"<a button type='button' class='btn btn-success'   id='commentPopUp' >댓글달기</a>  "	
-			);
-           if(data.favoriteInfo==0){
-	           $("#gogo").append(	        	
-	        		"<br><br><div id='favoriteView'><img src='${initParam.root}/img/empty_star.png' id='favoriteImg1'width='50' height='50'></div>"	
-	           );
-        	}else{
-        		  $("#gogo").append(      	        		
-	          		"<br><br><div id='favoriteView'><img src='${initParam.root}/img/full_star.png' id='favoriteImg2'></div>"	
-      	           );        		
-        	}   
-          //회원
-        }else if("${sessionScope.mvo.id}"!=""&&data.rvo.memberId!="${sessionScope.mvo.id}"){
-        	$("#gogo").append(
-        			 "<a button type='button' class='btn btn-success'   id='commentPopUp' >댓글달기</a>  "	
-        	  );
+        if("${sessionScope.mvo.id}"!=""){
+			//즐겨찾기 버튼
         	if(data.favoriteInfo==0){
-	           $("#gogo").append(	        		
-       				"<br><br><div id='favoriteView'><img src='${initParam.root}/img/empty_star.png' id='favoriteImg1'width='50' height='50'></div>"	
-	           );
-        	}else{
-        		  $("#gogo").append(      	        		
-        			"<br><br><div id='favoriteView'><img src='${initParam.root}/img/full_star.png' id='favoriteImg2'></div>"	
-      	           );
-        		
-        	}   
+  	           $("#gogo").append(	        	
+  	        		"<div id='favoriteView'><img src='${initParam.root}/img/empty_star.png' id='favoriteImg1'width='50' height='50'></div>"	
+  	           );
+          	}else{
+          		  $("#gogo").append(      	        		
+  	          		"<div id='favoriteView'><img src='${initParam.root}/img/full_star.png' id='favoriteImg2'></div>"	
+        	           );        		
+          	}   
+			//자기의 글인지 아닌지 판단 하여 수정 삭제 가능 여부 버튼
+        	if(data.rvo.memberId=="${sessionScope.mvo.id}"){
+        		$("#gogo").append("<a class='btn btn-danger' href='updateForm.do?recipeNo="+data.rvo.recipeNo+"'>수정하기</a>  "
+                        +"<a class='btn btn-danger' href='deleteRecipe.do?recipeNo="+data.rvo.recipeNo+"'>삭제하기</a>  "   
+                        +"<a button type='button' class='btn btn-success'   id='commentPopUp' >댓글달기</a>  "	
+     			);
+        	}else if(data.rvo.memberId!="${sessionScope.mvo.id}"){
+        		$("#gogo").append(
+           			 "<a button type='button' class='btn btn-success'   id='commentPopUp' >댓글달기</a>  "	
+           	  );
+        	}  	
         }
+        //닫기 버튼
         $("#gogo").append(
         		 "<button type='button' class='btn btn-primary' data-dismiss='modal'>"
                  +"<i class='fa fa-times'></i> Close</button>"	

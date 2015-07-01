@@ -75,13 +75,25 @@ public class RecipeController {
 	}
 	
 	/**
-	 * 레시피 검색
+	 * 재료 기반 레시피 검색
 	 * @param items
 	 * @return
 	 */
     @RequestMapping("searchRecipe.do")
     public ModelAndView searchRecipe(String items){
     	Map<String, Object> resultMap=recipeService.getSearchRecipeInfo(items);
+       return new ModelAndView("home", "total", resultMap);
+     }
+    
+    /**
+     * 내가 등록한 레시피정보를 가지고 있는 리스트를 가져와 home 화면에 출력한다.
+     * @param id
+     * @return
+     */
+    @RequestMapping("getMyRecipeInfo.do")
+    public ModelAndView getMyRecipeInfo(HttpSession session){
+    	MemberVO mvo = (MemberVO) session.getAttribute("mvo");
+    	Map<String, Object> resultMap=recipeService.getMyRecipeInfo(mvo.getId());
        return new ModelAndView("home", "total", resultMap);
      }
 	/**
@@ -433,7 +445,7 @@ public class RecipeController {
 		   @RequestMapping("favoriteView.do")
 		   public String favoriteView(Model model, String pageNo, HttpSession session){
 		      MemberVO mvo = (MemberVO) session.getAttribute("mvo");
-		      List<HashMap<String,Object>> fileLastNamePath=recipeService.getFavoriteInfo(pageNo,mvo);
+		      List<HashMap<String,Object>> fileLastNamePath=recipeService.getFavoriteInfo(mvo);
 		      model.addAttribute("fileLastNamePath",fileLastNamePath);
 		      return "favoriteView_recipe";
 		   }

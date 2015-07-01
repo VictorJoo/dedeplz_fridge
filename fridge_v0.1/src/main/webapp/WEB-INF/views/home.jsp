@@ -45,7 +45,7 @@ var maxCount=40;
 			<div class="row">
 				<div class="col-md-12 text-center">
 					<br>				<br>				<br>				<br>
-					<h1>검색 결과가 없습니다.</h1>
+					<h2><strong>선택하신 메뉴에 대한 RECIPE가 없습니다.</strong></h2>
 					<br>
 					<h4>
 						<br>자신만의 새로운 RECIPE를 만들어 보세요!

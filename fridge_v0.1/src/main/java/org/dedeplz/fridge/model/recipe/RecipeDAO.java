@@ -44,9 +44,10 @@ public interface RecipeDAO {
 	public void updateHitsByRecipeNo(int recipeNo);
 	public int getTotalGood(int recipeNo);
 	public int getTotalBad(int recipeNo);
-	public List<Integer> getMyRecipeList(String id);
+	public List<String> getMyRecipeList(String id);
 	public int getFavoriteRecipe(HashMap<String,Object> map);
 	public int getFavoriteNoAllList(int recipeNo);
 	public void deleteFavorites(int recipeNo);
 	public int getCountOfCommentByRecipeNo(int recipeNo);
+	public List<String> getFavoriteListByMemberId(String id);
 }

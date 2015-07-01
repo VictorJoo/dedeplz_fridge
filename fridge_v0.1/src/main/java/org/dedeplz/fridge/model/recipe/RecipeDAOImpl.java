@@ -344,7 +344,7 @@ public class RecipeDAOImpl implements RecipeDAO {
 	 * id를 이용 해당 아이디의 모든 레시피 번호를 받아온다.
 	 */
 	@Override
-	public List<Integer> getMyRecipeList(String id) {
+	public List<String> getMyRecipeList(String id) {
 		return sqlSessionTemplate.selectList("recipe.getMyRecipeList", id);
 	}
 
@@ -381,4 +381,12 @@ public class RecipeDAOImpl implements RecipeDAO {
 	public int getCountOfCommentByRecipeNo(int recipeNo){
 		return sqlSessionTemplate.selectOne("recipeComment.getCountOfCommentByRecipeNo",recipeNo);
 	}
+	
+	/**
+	    * 회원 아이디에 해당하는 즐겨찾기 목록(레시피 번호)을 갖고 온다.
+	    */
+	   @Override
+	   public List<String> getFavoriteListByMemberId(String id) {
+	      return sqlSessionTemplate.selectList("recipe.getFavoriteListByMemberId", id);
+	   }
 }

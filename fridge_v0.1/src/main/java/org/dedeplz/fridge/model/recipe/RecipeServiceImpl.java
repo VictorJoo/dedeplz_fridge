@@ -370,7 +370,7 @@ public class RecipeServiceImpl implements RecipeService{
 	 * 
 	 */
 	@Override
-	public List<Integer> getMyRecipeList(String id) {
+	public List<String> getMyRecipeList(String id) {
 		return recipeDAO.getMyRecipeList(id);
 	}
 	/**
@@ -475,27 +475,30 @@ public class RecipeServiceImpl implements RecipeService{
 	 * 자신이 추가한 즐겨찾기 리스트를 가져와 home에 출력한다.
 	 */
 	@Override
-	public List<HashMap<String, Object>> getFavoriteInfo(String pageNo,	MemberVO mvo) {
-		 FavoriteListVO fvo = getFavoriteRecipeList(pageNo, mvo.getId());
-	     List<FavoriteVO> fList = fvo.getList();
-	     List<HashMap<String,Object>> fileLastNamePath = new ArrayList<HashMap<String,Object>>();
-	     for (int i = 0; i < fList.size(); i++) {
-	    	 String fileLastPath = recipeDAO.getFileLastNamePath(Integer.toString(fList.get(i).getRecipeNo()));
-	    	 RecipeVO rvo=getRecipeInfo(fList.get(i).getRecipeNo());
-	    	 String tag=getItemTag(fList.get(i).getRecipeNo());
-	    	 int goodPoint =recipeDAO.getTotalGood(fList.get(i).getRecipeNo());
-			 int commentCount =recipeDAO.getCountOfCommentByRecipeNo(fList.get(i).getRecipeNo());
-		     HashMap<String, Object> map=new HashMap<String, Object>();
-	         	map.put("rvo",rvo);
-	            map.put("fileLastPath", fileLastPath);
-	            map.put("tag", tag);
-		        map.put("goodPoint",goodPoint);
-		        map.put("commentCount", commentCount);
-	            fileLastNamePath.add(map);
-	         }
-		return fileLastNamePath;
+	public List<HashMap<String, Object>> getFavoriteInfo(MemberVO mvo) {
+		List<String> fList = recipeDAO.getFavoriteListByMemberId(mvo.getId());
+		return getRecipeInfoList(fList);
+	}
+
+	/**
+	 * 자기가 쓴 레시피 정보를 출력한다.
+	 */
+	@Override
+	public Map<String, Object> getMyRecipeInfo(String id) {
+		List<String> recipeNoList = getMyRecipeList(id);
+		Map<String, Object> resultMap = new HashMap<String, Object>();
+		resultMap.put("recipeNoList", recipeNoList.size());
+		resultMap.put("filePath", getRecipeInfoList(recipeNoList));
+		return resultMap;
 	}
 	
+	/**
+	 * 레시피 번호 리스트를 매개변수로 받아
+	 * 각 레시피의 정보들을 맵에 put 하여 list에 add 한뒤
+	 * 리턴한다.
+	 * @param recipeNoList
+	 * @return
+	 */
 	public List<HashMap<String, Object>> getRecipeInfoList(List<String> recipeNoList){		
 		List<HashMap<String,Object>> fileLastNamePath = new ArrayList<HashMap<String,Object>>();		
 		for (int i = 0; i < recipeNoList.size(); i++) {

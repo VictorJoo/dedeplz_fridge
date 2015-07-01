@@ -74,7 +74,7 @@ function loginCheck() {
 		                           <a href="${initParam.root}favoriteView.do">
 		                           <i class="fa fa-2x fa-heart wow bounceIn" style="color:#FF5651"
 		                           data-wow-delay=".3s"></i></a>
-		                           <h5><a href="favoriteView.do">즐겨찾기</a></h5>
+		                           <h5><a href="${initParam.root}favoriteView.do">즐겨찾기</a></h5>
 		                        
 		                        </c:otherwise>
 		                  </c:choose>
@@ -122,8 +122,7 @@ function loginCheck() {
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Close">
+				<button type="button" class="close" data-dismiss="modal"	aria-label="Close">
 					<span aria-hidden="true">&times;</span>
 				</button>
 				<h4 class="modal-title" id="exampleModalLabel">Login</h4>
