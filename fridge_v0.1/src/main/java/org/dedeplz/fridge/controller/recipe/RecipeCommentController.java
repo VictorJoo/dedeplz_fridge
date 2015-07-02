@@ -6,6 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
+import org.dedeplz.fridge.common.LoginCheck;
 import org.dedeplz.fridge.model.member.MemberVO;
 import org.dedeplz.fridge.model.recipe.RecipeCommentService;
 import org.dedeplz.fridge.model.recipe.RecipeCommentVO;
@@ -21,73 +22,78 @@ private RecipeCommentService recipeCommentService;
 @Resource(name="recipeServiceImpl")
 private RecipeService recipeService;
 
-
-
 /**
- * 댓글 입력하기(확인 눌렀을때) 
+ * 댓글창에 댓글 리스트로 뿌리기
+ * (레시피에서 댓글 달기 클릭 시,
+ * 댓글 입력, 삭제, 답글 입력 수정 삭제 시
+ * @param rcvo
+ * @param model
+ * @return
  */
-/*@RequestMapping("insertComment.do")
- public Object insertComment(RecipeCommentVO rcvo,HttpSession session,Model model){
-	System.out.println("controller insertComment rcvo :  "+rcvo);
-	 MemberVO memberVO=(MemberVO) session.getAttribute("mvo");
-	 System.out.println("controller memberVO :"+memberVO);
-	 rcvo.setCommentNick(memberVO.getNick());
-	 recipeCommentService.insertComment(rcvo);	
-	 System.out.println(rcvo.getCommentNo());	 
-	 return  recipeCommentService.getCommentRecipeList(rcvo.getCommentRecipeNo());
-	 
- }*/
 
-/**
- * 댓글에 대한 댓글 입력하기(댓글 눌렀을때) 
- */
-@RequestMapping("insertRecomment.do")
-
-public Object insertRecomment(RecipeCommentVO rcvo,HttpSession session,Model model){
-	System.out.println("controller insertComment rcvo :  "+rcvo);
-	MemberVO memberVO=(MemberVO) session.getAttribute("mvo");
-	System.out.println("controller memberVO :"+memberVO);
-	rcvo.setCommentNick(memberVO.getNick());
-	recipeCommentService.insertComment(rcvo);	
-	System.out.println(rcvo.getCommentNo());	 
-	return  recipeCommentService.getCommentRecipeList(rcvo.getCommentRecipeNo());
-	
-}
-
-	/**
-	 * 댓글창에 댓글 리스트로 뿌리기(댓글달기 클릭시 처음뿌리기)
-	 */
 @RequestMapping("getCommentRecipeList.do")
 public String getCommentRecipeList(RecipeCommentVO rcvo, Model model) {
-	System.out.println("getCommentRecipeList.do  recipeNo:"+rcvo.getCommentRecipeNo());
-	List<RecipeCommentVO> clvo = recipeCommentService.getCommentRecipeList(rcvo.getCommentRecipeNo());
-	model.addAttribute("clvo", clvo);
-	model.addAttribute("recipeNo", rcvo.getCommentRecipeNo());	
-	return "/posting/commentRecipeForm";
+   List<RecipeCommentVO> clvo = recipeCommentService.getCommentRecipeList(rcvo.getCommentRecipeNo());
+   model.addAttribute("clvo", clvo);
+   model.addAttribute("recipeNo", rcvo.getCommentRecipeNo());   
+   return "/posting/commentRecipeForm";
 }
+
+/**
+ * 댓글 삭제
+ * @param rcvo
+ * @return
+ */
+@LoginCheck
+@RequestMapping("deleteComment.do")
+public String deleteComment(RecipeCommentVO rcvo) {
+   recipeCommentService.deleteComment(rcvo.getCommentNo());  
+   return "redirect:getCommentRecipeList.do?CommentRecipeNo="+rcvo.getCommentRecipeNo();
+}
+
+/**
+ * 댓글 입력
+ * @param rcvo
+ * @param session
+ * @return
+ */
+@LoginCheck
 @RequestMapping("registerComment.do")
-public String registerComment(RecipeCommentVO rcvo,Model model,HttpSession session){
-	MemberVO memberVO=(MemberVO) session.getAttribute("mvo");
-	rcvo.setCommentNick(memberVO.getNick());
-	recipeCommentService.insertComment(rcvo);	
-	List<RecipeCommentVO> clvo=recipeCommentService.getCommentRecipeList(rcvo.getCommentRecipeNo());
-	model.addAttribute("clvo", clvo);
-	model.addAttribute("recipeNo", rcvo.getCommentRecipeNo());
-	return "/posting/commentRecipeForm";
+public String registerComment(RecipeCommentVO rcvo,HttpSession session){
+   MemberVO memberVO=(MemberVO) session.getAttribute("mvo");
+   rcvo.setCommentNick(memberVO.getNick());
+   recipeCommentService.insertComment(rcvo);
+   return "redirect:getCommentRecipeList.do?CommentRecipeNo="+rcvo.getCommentRecipeNo();
 }
+/**
+ * 댓글에 답글을 눌러 작성
+ * @param rcvo
+ * @param session
+ * @param model
+ * @return
+ */
+@LoginCheck
 @RequestMapping("registerRecomment.do")
-public String registerRecomment(RecipeCommentVO rcvo,HttpSession session,Model model){
-	System.out.println("rcvo:asdfsa"+rcvo);
-	MemberVO memberVO=(MemberVO) session.getAttribute("mvo");
-	rcvo.setCommentRecipeNo(rcvo.getCommentRecipeNo());
-	rcvo.setCommentRef(rcvo.getCommentNo());
-	rcvo.setCommentNick(memberVO.getNick());
-	rcvo.setCommentGroup(rcvo.getCommentNo());
-	rcvo.setCommentLevel(1);
-	recipeCommentService.insertRecomment(rcvo);	
-	List<RecipeCommentVO> clvo=recipeCommentService.getCommentRecipeList(rcvo.getCommentRecipeNo());
-	model.addAttribute("clvo", clvo);
-	model.addAttribute("recipeNo", rcvo.getCommentRecipeNo());
-	return "/posting/commentRecipeForm";
+public String registerRecomment(RecipeCommentVO rcvo,HttpSession session){
+   MemberVO memberVO=(MemberVO) session.getAttribute("mvo");
+   System.out.println("memberVO:"+memberVO);
+   rcvo.setCommentRecipeNo(rcvo.getCommentRecipeNo());
+   rcvo.setCommentNick(memberVO.getNick());
+   rcvo.setCommentGroup(rcvo.getCommentGroup());
+   rcvo.setCommentLevel(1);
+   recipeCommentService.insertRecomment(rcvo);
+   return "redirect:getCommentRecipeList.do?CommentRecipeNo="+rcvo.getCommentRecipeNo();
+}
+/**
+ * 답글 수정
+ * @param rcvo
+ * @return
+ */
+@LoginCheck
+@RequestMapping("updateRecomment.do")
+public String updateRecomment(RecipeCommentVO rcvo){
+   rcvo.setCommentContents(rcvo.getCommentContents());
+   recipeCommentService.updateRecomment(rcvo);
+   return "redirect:getCommentRecipeList.do?CommentRecipeNo="+rcvo.getCommentRecipeNo();
 }
 }

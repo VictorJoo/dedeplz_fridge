@@ -30,4 +30,13 @@ create table board_file(
 	file_path varchar2(500) not null,
 	constraint fk_board_no_file foreign key(board_no) references board(board_no)
 )
-
+--게시판 댓글테이블--
+create table board_comment(
+comment_no  number  primary key,
+comment_contents  clob   not null,
+comment_time date  not null,
+comment_nick   varchar2(30)   not null,
+comment_board_no number   not null 
+)
+drop board_comment;
+create sequence board_comment_seq nocache;

@@ -2,7 +2,6 @@ package org.dedeplz.fridge.model.recipe;
 
 public class RecipeCommentVO {
 	private int commentNo;
-	private int commentRef;
 	private int commentGroup;
 	private int commentLevel;
 	private String  commentContents;
@@ -15,12 +14,6 @@ public class RecipeCommentVO {
 	}
 	public void setCommentNo(int commentNo) {
 		this.commentNo = commentNo;
-	}
-	public int getCommentRef() {
-		return commentRef;
-	}
-	public void setCommentRef(int commentRef) {
-		this.commentRef = commentRef;
 	}
 	public int getCommentGroup() {
 		return commentGroup;
@@ -66,19 +59,17 @@ public class RecipeCommentVO {
 	}
 	@Override
 	public String toString() {
-		return "RecipeCommentVO [commentNo=" + commentNo + ", commentRef="
-				+ commentRef + ", commentGroup=" + commentGroup
+		return "RecipeCommentVO [commentNo=" + commentNo + ", commentGroup=" + commentGroup
 				+ ", commentLevel=" + commentLevel + ", commentContents="
 				+ commentContents + ", commentTime=" + commentTime
 				+ ", commentNick=" + commentNick + ", commentRecipeNo="
 				+ commentRecipeNo + ", commentRefNick=" + commentRefNick + "]";
 	}
-	public RecipeCommentVO(int commentNo, int commentRef, int commentGroup,
+	public RecipeCommentVO(int commentNo, int commentGroup,
 			int commentLevel, String commentContents, String commentTime,
 			String commentNick, int commentRecipeNo, String commentRefNick) {
 		super();
 		this.commentNo = commentNo;
-		this.commentRef = commentRef;
 		this.commentGroup = commentGroup;
 		this.commentLevel = commentLevel;
 		this.commentContents = commentContents;

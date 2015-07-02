@@ -1,10 +1,7 @@
 package org.dedeplz.fridge.controller.board;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -13,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.dedeplz.fridge.common.LoginCheck;
+import org.dedeplz.fridge.model.board.BoardCommentService;
 import org.dedeplz.fridge.model.board.BoardService;
 import org.dedeplz.fridge.model.board.BoardVO;
 import org.dedeplz.fridge.model.board.FileVO;
@@ -29,6 +27,9 @@ public class BoardController {
 	private BoardService boardService;
 	@Resource(name = "uploadPath")
 	private String path;
+	
+	@Resource(name="boardCommentServiceImpl")
+	private BoardCommentService boardCommentService;
 /**
  * 자유게시판 리스트
  * @param request
@@ -62,17 +63,11 @@ public class BoardController {
 	 */
 	@RequestMapping("registerBoard.do")
 	public ModelAndView registerBoard(BoardVO bvo, String items) {
+		
 		int boardNo = 0;
 		String contents = bvo.getContents();
-		List<String> list = convertHtmlimg(contents);
-		List<FileVO> fvoList=new ArrayList<FileVO>();
-		for (String imgUrl : list) {
-			FileVO fvo = new FileVO();
-			String imgName[]=imgUrl.split("/");
-			fvo.setFileName(imgName[imgName.length-1].toString());
-			fvo.setFilePath(imgUrl);
-			fvoList.add(fvo);
-		}
+		List<FileVO> fvoList=boardService.getFvoList(contents);
+		
 		try {
 			boardNo = boardService.registerBoard(bvo,items,fvoList);
 		} catch (Exception e) {
@@ -95,23 +90,7 @@ public class BoardController {
 		return new ModelAndView("showcontent_board","vo",bvo);
 	}
 	
-	/**
-	 * java 정규 표현식을 이용한 java 이미지 태그 추출(이미지 저장 경로)
-	 * 
-	 * @param img
-	 * @return
-	 */
-	public static List<String> convertHtmlimg(String img) {
-		Pattern nonValidPattern = Pattern
-				.compile("<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>");
-
-		List<String> result = new ArrayList<String>();
-		Matcher matcher = nonValidPattern.matcher(img);
-		while (matcher.find()) {
-			result.add(matcher.group(1));
-		}
-		return result;
-	}
+	
 	
 	/**
 	 * 자유게시판 상세보기
@@ -124,9 +103,13 @@ public class BoardController {
 	@RequestMapping("showContent.do")
 	   public ModelAndView showContents(FileVO fvo,@CookieValue(value="memberCookie",required=false) String cookieValue,HttpServletResponse response,int boardNo) {
 		BoardVO bvo=null;
+		
+		ModelAndView mv=new ModelAndView();
+		mv.setViewName("showcontent_board");
 	       if(cookieValue==null){//memberCookie cookie 존재하지 않으므로 cookie 생성하고 count 증가 (맨처음)
 	            response.addCookie(new Cookie("memberCookie","|"+boardNo+"|"));
 	             bvo=boardService.getBoardInfo(boardNo);
+	         
 	         }else if(cookieValue.indexOf("|"+boardNo+"|")==-1){//memberCookie cookie 존재하지만 {}번글은 처음 조회하므로 count증가
 	            cookieValue+="|"+boardNo+"|";
 	            //글번호를 쿠키에 추가 
@@ -135,7 +118,10 @@ public class BoardController {
 	         }else{//memberCookie cookie 존재하고 이전에 해당 게시물 읽었으므로 count 증가x
 	             bvo=boardService.getBoardInfoNoHits(boardNo);
 	         }
-	       return new ModelAndView("showcontent_board","vo",bvo);
+	       mv.addObject("vo",bvo);
+	       mv.addObject("bcvo", boardCommentService.getBoardCommentList(boardNo));
+	       return mv;
+	      
 	}
 	/**
 	 * 자유게시판 삭제
@@ -148,6 +134,8 @@ public class BoardController {
 	@RequestMapping("deleteBoard.do")
 	public ModelAndView deleteForm(BoardVO bvo, HttpSession session) {
 		MemberVO mvo = (MemberVO) session.getAttribute("mvo");
+		
+		
 		String id = mvo.getId();
 		List<String> list = boardService.getFileName(bvo.getBoardNo());
 		File file = new File(path + "\\" + id);
@@ -159,6 +147,8 @@ public class BoardController {
 				}
 			}
 		}
+		
+		
 		boardService.deleteBoardAll(bvo.getBoardNo());
 		return new ModelAndView("redirect:BoardList.do");
 	}
@@ -181,17 +171,11 @@ public class BoardController {
 	   @RequestMapping("updateBoard.do")
 	   public ModelAndView updateBoard(HttpServletRequest request,
 	         HttpServletResponse response, BoardVO bvo, String items) {
-	      List<String> list = convertHtmlimg(bvo.getContents());
+	    //  List<String> list = convertHtmlimg(bvo.getContents());
 	      boardService.deleteBoardFile(bvo.getBoardNo());
 	      boardService.updateBoard(bvo);
-	      List<FileVO> fvoList = new ArrayList<FileVO>();
-	      for (String imgUrl : list) {
-	         FileVO fvo = new FileVO();
-	         String imgName[] = imgUrl.split("/");
-	         fvo.setFileName(imgName[imgName.length - 1].toString());
-	         fvo.setFilePath(imgUrl);
-	         fvoList.add(fvo);
-	      }
+	      List<FileVO> fvoList=boardService.getFvoList(bvo.getContents());
+	      
 	      boardService.insertBoardFile(bvo, fvoList);
 	      return new ModelAndView("redirect:registerBoardResult.do?boardNo="
 	            + bvo.getBoardNo());

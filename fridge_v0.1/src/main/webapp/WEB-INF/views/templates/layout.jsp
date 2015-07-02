@@ -344,6 +344,9 @@ img#badImg {
                }
                $("#updForm").submit();
             });   
+            
+            
+            
             var goodImg="<img src='${initParam.root}/img/추천.jpg' id='goodImg'>&nbsp;&nbsp;";
             var badImg="<img src='${initParam.root}/img/비추천.jpg' id='badImg'>&nbsp;&nbsp;";
       		/* 좋아요 추천 */
@@ -625,7 +628,151 @@ img#badImg {
 	            		  location.href="${initParam.root}searchByCategory.do?category="+category;
 	            	}
 	            });
-	            
+	            //자유게시판 댓글달기
+                $("#boardCommentBtn").click(function() {   
+                   $.ajax({
+                      type:"POST",
+                      url:"registerBoardComment.do",
+                      data:$("#boardCommentForm").serialize(),   
+                      success:function(data){        
+                          var table="<div class='col-md-10' style='padding:0px; height:auto; width:600px; margin-left: 50px'>";
+                           table+="<table class='table' cellpadding='10'  style='table-layout:fixed'>"; 
+                         for(var i=0;i<data.length;i++){
+                            
+                            table+="<input type='hidden' id='commentBoardNo' name='commentBoardNo' value="+data[i].commentBoardNo+">";
+                             table+="<thead><tr><th colspan='2'><b>작성자"+ data[i].commentNick+"</b></th>";
+                          
+                           // table+="<th></th>";
+                            table+="<th><b>"+data[i].commentTime+"</b></th></tr></thead>";
+                            table+="<tbody><tr>";
+                            table+="<td id='"+data[i].commentNo+"CommentContents' colspan='2'><font size='2'>"+data[i].commentContents+"</font></td>";
+                            
+                            if("${sessionScope.mvo.nick}"==data[i].commentNick){
+                                  table+="<td><button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='updateBoardCommentBtn' name='updateBoardCommentBtn'>수정</button>"; 
+                                table+="<button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='deleteBoardCommentBtn' name='deleteBoardCommentBtn'>삭제</button></td></tr></tbody>";
+                            }else if("${sessionScope.mvo.level}"=='6'){
+                                table+="<td><button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='deleteBoardCommentBtn' name='deleteBoardCommentBtn'>삭제</button></td></tr></tbody>";
+                            }
+                         }
+                         table+="</table>";
+                         table+="</div>";
+                         $("#commentList").html(table); 
+                         $("#boardComment").val("");
+                      
+                      }//callback         
+                   });//ajax
+                });
+                
+              
+                  $(document).on("click", ":input[name=editCommentBtn]",function(e){             
+                   
+                     $.ajax({
+                        type:"POST",
+                        url:"updateBoardComment.do",
+                        data:"commentNo="+$("#commentNo").val()+"&commentBoardNo="+$("#commentBoardNo").val()+"&commentContents="+$("#editComment").val(),   
+                        success:function(data){
+                           var table="<div class='col-md-10' style='padding:0px; height:auto; width:600px; margin-left: 50px'>";
+                            table+="<table class='table' cellpadding='10'  style='table-layout:fixed'>"; 
+                           for(var i=0;i<data.length;i++){                              
+                              table+="<input type='hidden' id='commentBoardNo' name='commentBoardNo' value="+data[i].commentBoardNo+">";
+                               table+="<thead><tr><th colspan='2'><b>작성자"+ data[i].commentNick+"</b></th>";
+
+                              table+="<th><b>"+data[i].commentTime+"</b></th></tr></thead>";
+                              table+="<tbody><tr>";
+                              table+="<td id='"+data[i].commentNo+"CommentContents' colspan='2'><font size='2'>"+data[i].commentContents+"</font></td>";
+                              
+                              if("${sessionScope.mvo.nick}"==data[i].commentNick){
+                                    table+="<td><button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='updateBoardCommentBtn' name='updateBoardCommentBtn'>수정</button>"; 
+                                  table+="<button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='deleteBoardCommentBtn' name='deleteBoardCommentBtn'>삭제</button></td></tr></tbody>";
+                              }else if("${sessionScope.mvo.level}"=='6'){
+                                  table+="<td><button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='deleteBoardCommentBtn' name='deleteBoardCommentBtn'>삭제</button></td></tr></tbody>";
+                              }                 
+                           }
+                           table+="</table>";
+                           table+="</div>";
+                           $("#commentList").html(table); 
+                           $("#boardComment").val("");  
+                           
+                        }//callback
+                   });//ajax
+            });//editCommentBtn click
+            
+            
+                //자유게시판 댓글 수정폼 load
+                $(document).on("click", ":input[name=updateBoardCommentBtn]",function(e){
+                   var commentNo=$(this).val();
+                  $.ajax({
+                       type:"POST",
+                       url:"showBoardComment.do",
+                       data:"&commentBoardNo="+$("#commentBoardNo").val(),   
+                       success:function(data){
+                   var table="<div class='col-md-10' style='padding:0px; height:auto; width:600px; margin-left: 50px'>";
+                     table+="<table class='table' cellpadding='10'  style='table-layout:fixed' >"; 
+                   
+                    for(var i=0;i<data.length;i++){
+                      
+                      table+="<input type='hidden' id='commentBoardNo' name='commentBoardNo' value="+data[i].commentBoardNo+">";
+                      table+="<thead><tr>";
+                    
+                      table+="<th colspan='2'><b>작성자"+ data[i].commentNick+"</b></th>";
+                      table+="<th><b>"+data[i].commentTime+"</b></th></tr></thead>";
+                      table+="<tbody><tr>";
+                      if(commentNo==data[i].commentNo){               
+                         table+="<input type='hidden' id='commentNo' name='commentNo' value="+data[i].commentNo+">";
+                         table+="<td colspan='2'><textarea rows='2' style='width: 100%;' id='editComment'>"
+                         +data[i].commentContents+"</textarea>";
+                         
+                         table+="<td><input type='button' a class='btn btn-primary' value='수정' name='editCommentBtn'></td></tr></tbody>";
+                         
+                      }else{
+                         table+="<td id='"+data[i].commentNo+"CommentContents'><font size='2'>"+data[i].commentContents+"</font></td>";
+                      }                                                                
+          
+                   }
+                   table+="</table>";
+                   table+="</div>";
+                   $("#commentList").html(table);                  
+                       }//callback
+               });//ajax
+                });
+                
+              //자유게시판 댓글 삭제
+                $(document).on("click", ":input[name=deleteBoardCommentBtn]",function(e){
+                   if(confirm("삭제하시겠습니까?")){
+                    $.ajax({
+                      type:"POST",
+                      url:"deleteBoardComment.do",
+                      data:"commentNo="+$(this).val()+"&commentBoardNo="+$("#commentBoardNo").val(),   
+                      success:function(data){           
+                          var table="<div class='col-md-10' style='padding:0px; height:auto; width:600px; margin-left: 50px'>";
+                          table+="<table class='table' cellpadding='10'  style='table-layout:fixed'>"; 
+                         for(var i=0;i<data.length;i++){
+                            table+="<input type='hidden' id='commentBoardNo' name='commentBoardNo' value="+data[i].commentBoardNo+">";
+                            table+="<input type='hidden' id='commentNo' name='commentNo' value="+data[i].commentNo+">";
+                             table+="<thead><tr>";
+                     
+                            table+="<th colspan='2'><b>작성자 "+ data[i].commentNick+"</b></th>";
+                            table+="<th><b>"+data[i].commentTime+"</b></th></tr></thead>";
+                            table+="<tbody><tr>";
+                            table+="<td id='"+data[i].commentNo+"CommentContents' colspan='2'><font size='2'>"+data[i].commentContents+"</font></td>";
+                            if("${sessionScope.mvo.nick}"==data[i].commentNick){
+                            table+="<td><button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='updateBoardCommentBtn' name='updateBoardCommentBtn'>수정</button>"; 
+                            table+="<button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='deleteBoardCommentBtn' name='deleteBoardCommentBtn'>삭제</button></td></tr></tbody>"; 
+                         
+                            }else if("${sessionScope.mvo.level}"=='6'){
+                                table+="<td><button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='deleteBoardCommentBtn' name='deleteBoardCommentBtn'>삭제</button></td></tr></tbody>";
+                            }
+                         }
+                         table+="</table>";
+                         table+="</div>";
+                         $("#commentList").html(table); 
+                         $("#boardComment").val("");
+                      }//callback         
+                   });//ajax 
+                   }else{
+                      return false;
+                   }      
+                });
    });//ready
    //댓글 팝업
    $(document).on("click","#commentPopUp",function(){

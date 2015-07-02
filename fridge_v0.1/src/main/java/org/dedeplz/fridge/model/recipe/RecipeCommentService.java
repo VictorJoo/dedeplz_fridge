@@ -4,8 +4,9 @@ import java.util.List;
 
 public interface RecipeCommentService {
 
-	public void insertComment(RecipeCommentVO rcvo);
-	public RecipeCommentVO getCommentInfoByCommentNo(int commentNo);
-	public List<RecipeCommentVO>  getCommentRecipeList(int recipeNo);
-	public void insertRecomment(RecipeCommentVO rcvo);
+   public void insertComment(RecipeCommentVO rcvo);
+   public List<RecipeCommentVO>  getCommentRecipeList(int recipeNo);
+   public void insertRecomment(RecipeCommentVO rcvo);
+   public void deleteComment(int commentNo);
+   public void updateRecomment(RecipeCommentVO rcvo);
 }

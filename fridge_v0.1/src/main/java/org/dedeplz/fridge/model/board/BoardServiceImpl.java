@@ -1,8 +1,11 @@
 package org.dedeplz.fridge.model.board;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 
@@ -175,5 +178,42 @@ public class BoardServiceImpl implements BoardService {
 		      PagingBean pagingBean = new PagingBean(total, pn);
 		      return new BoardListVO(list, pagingBean);
 		   }
+		   
+		
+		   
+		   
+		   
+		   
+		@Override
+		public List<FileVO> getFvoList(String contents) {
+			List<String> list = convertHtmlimg(contents);
+			List<FileVO> fvoList=new ArrayList<FileVO>();
+			for (String imgUrl : list) {
+				FileVO fvo = new FileVO();
+				String imgName[]=imgUrl.split("/");
+				fvo.setFileName(imgName[imgName.length-1].toString());
+				fvo.setFilePath(imgUrl);
+				fvoList.add(fvo);
+			}
+			return fvoList;
+		}
+		
+		/**
+		 * java 정규 표현식을 이용한 java 이미지 태그 추출(이미지 저장 경로)
+		 * 
+		 * @param img
+		 * @return
+		 */
+		public List<String> convertHtmlimg(String img) {
+			Pattern nonValidPattern = Pattern
+					.compile("<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>");
+
+			List<String> result = new ArrayList<String>();
+			Matcher matcher = nonValidPattern.matcher(img);
+			while (matcher.find()) {
+				result.add(matcher.group(1));
+			}
+			return result;
+		}
 		
 }

@@ -18,6 +18,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<typeAlias type="org.dedeplz.fridge.model.board.BoardVO" alias="bvo"/>
 		<typeAlias type="org.dedeplz.fridge.model.board.FileVO" alias="bfvo"/>
 		<typeAlias type="org.dedeplz.fridge.model.recipe.RecipeCommentVO" alias="rcvo"/>
+		<typeAlias alias="bcvo" type="org.dedeplz.fridge.model.board.BoardCommentVO"/>
 	</typeAliases>	
     <!-- sql mapping config xml 을 연결 -->
 	<mappers>
@@ -27,6 +28,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 		<mapper resource="mybatis/config/board.xml"/>
 		<mapper resource="mybatis/config/boardFile.xml"/>
 		<mapper resource="mybatis/config/recipeComment.xml"/>	
+		<mapper resource="mybatis/config/boardComment.xml"/>
 	</mappers>
 </configuration>
 

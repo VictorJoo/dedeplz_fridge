@@ -105,7 +105,6 @@ select *,
 -- 레시피의 댓글 테이블 생성 sql -- 
 create table recipe_comment(
 	comment_no  number  primary key,
-	comment_ref  number   not null,
 	comment_group  number   not null,
 	comment_level  number  default 0,
 	comment_contents  clob   not null,
