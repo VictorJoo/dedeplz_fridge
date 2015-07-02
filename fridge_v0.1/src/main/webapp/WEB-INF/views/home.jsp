@@ -86,8 +86,8 @@ var maxCount=40;
 						</div>
 						<div>
 						<br>
-						 <img src="img/comment.jpg"> ${topPath.commentCount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						 <img src="img/love.jpg"> ${topPath.goodPoint}
+						 <img src="img/love.jpg"> ${topPath.goodPoint}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <img src="img/comment.jpg"> ${topPath.commentCount}
 						
 					</div>
 				</div>
@@ -122,8 +122,8 @@ var maxCount=40;
 					</div>
 					<div>
 					<br>
-					<img src="img/comment.jpg"> ${path.commentCount} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<img src="img/love.jpg"> ${path.goodPoint}
+					<img src="img/love.jpg"> ${path.goodPoint}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <img src="img/comment.jpg"> ${path.commentCount}					
 					</div>
 				</div>
 			</div>

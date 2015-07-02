@@ -234,6 +234,9 @@ public class RecipeServiceImpl implements RecipeService{
 		List<String> list = recipeDAO.getFileName(recipeNo);
 		File file = new File(path + "\\" + id);
 		File f[] = file.listFiles();
+
+		System.out.println("파일 리스트:" + file);
+		System.out.println("파일 : " + f);
 		for (int i = 0; i < list.size(); i++) {
 			for (int y = 0; y < f.length; y++) {
 				if (f[y].getName().equals(list.get(i))) {
@@ -335,6 +338,7 @@ public class RecipeServiceImpl implements RecipeService{
 	      List<FavoriteVO> favoriteList=recipeDAO.getFavoriteRecipeList(favoriteMap);
 	      System.out.println(favoriteList);
 	      int total=recipeDAO.totalFavoriteContent(id);
+	      System.out.println("토탈"+total);
 	      PagingBean paging=new PagingBean(total,Integer.parseInt(pageNo));
 	      FavoriteListVO lvo=new FavoriteListVO(favoriteList,paging);
 	      return lvo;

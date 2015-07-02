@@ -77,7 +77,7 @@ img#badImg {
 	                   ${sessionScope.mvo.nick}님 접속중 <span class="fa fa-caret-down"></span></a>
 			              <ul class="dropdown-menu" role="menu">			                
 	                       	<li><a class="page-scroll"
-                       		 href="${initParam.root}member_mypage.do">MyPage</a></li>
+                       		 href="${initParam.root}member_mypage.do">My Page</a></li>
                    		  	<li><a class="page-scroll"
 	                        href="${initParam.root}getMyRecipeInfo.do">My Recipe</a></li>	  
                         	<li><a class="page-scroll"
@@ -526,6 +526,7 @@ img#badImg {
 									var infomation = "<br><br><center><h3>등록된 즐겨찾기가 없습니다. ^^</h3></center>";
 									$("#favorite").html(infomation);
 								}
+								location.reload();
 								
 							}
 						});// ajax
@@ -537,18 +538,19 @@ img#badImg {
 				});//click
 				
 				/* 즐겨찾기 삭제 이벤트 */
-				$(document).on("click","#favoriteImg2",function(){
-					var recipeNo = $("#gnbUseRecipeNo").val();		
-						$.ajax({
-							type:"POST",
-							url:"deleteFavorite.do",				
-							data:"memberId=${sessionScope.mvo.id}&recipeNo=" + recipeNo,
-							success:function(result){ 
-									 var info = "<img src='${initParam.root}/img/empty_star.png' id='favoriteImg1' width='50' height='50'></div>";
-										$("#favoriteView").html(info);
-							}
-						});// ajax 
-	            });
+	            $(document).on("click","#favoriteImg2",function(){
+	               var recipeNo = $("#gnbUseRecipeNo").val();      
+	                  $.ajax({
+	                     type:"POST",
+	                     url:"deleteFavorite.do",            
+	                     data:"memberId=${sessionScope.mvo.id}&recipeNo=" + recipeNo,
+	                     success:function(result){ 
+	                            var info = "<img src='${initParam.root}/img/empty_star.png' id='favoriteImg1' width='50' height='50'></div>";
+	                              $("#favoriteView").html(info);
+	                             
+	                     }
+	                  });// ajax 
+	               });
 	            
 	           /*  즐겨찾기 등록 */
 	            $(document).on("click","#favoriteImg1",function(){
@@ -666,16 +668,21 @@ function testAlert(path) {
         			+"<input type='hidden' id='gnbUseMemberId' value='"+data.rvo.memberId+"'>"	
         );   
         //회원의 view
-        if("${sessionScope.mvo.id}"!=""){			
+        if("${sessionScope.mvo.id}"!=""){		
         	$("#gogo").append(         			 
          			 "<a button type='button' class='btn btn-success btn-sm'   id='commentPopUp'  >댓글달기</a>  "	
          	  );   
 			//자기의 글인지 아닌지 판단 하여 수정 삭제 가능 여부 버튼
-        	if(data.rvo.memberId=="${sessionScope.mvo.id}"){
+        	if(data.rvo.memberId=="${sessionScope.mvo.id}"){        		
         		$("#gogo").append(        				
         				"<a class='btn btn-danger btn-sm' href='updateForm.do?recipeNo="
         						+data.rvo.recipeNo+"' >수정</a>  "
                         +"<a class='btn btn-danger btn-sm' href='deleteRecipe.do?recipeNo="
+                        		+data.rvo.recipeNo+"'>삭제</a> <br> "                         
+     			);
+        	}else if("${sessionScope.mvo.level}"==6){
+        		$("#gogo").append(        				        				
+                        "<a class='btn btn-danger btn-sm' href='deleteRecipe.do?recipeNo="
                         		+data.rvo.recipeNo+"'>삭제</a> <br> "                         
      			);
         	}

@@ -12,9 +12,7 @@
 		<table>
 			<tr>
 				<td>제목 <input type="text" name="title" id="title" size="50">
-				</td>
-				<!-- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
-				<%-- 닉네임 : ${sessionScope.mvo.nick} &nbsp;&nbsp;&nbsp; 아이디 : ${sessionScope.mvo.id} <br> --%>
+				</td>				
 				<td>요리시간 : <select name="cookingTime" id="cookingTime">
 						<option value="">----</option>
 						<option value="10">10분</option>

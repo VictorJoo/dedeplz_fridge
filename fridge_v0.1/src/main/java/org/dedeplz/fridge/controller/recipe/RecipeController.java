@@ -447,6 +447,7 @@ public class RecipeController {
 		      MemberVO mvo = (MemberVO) session.getAttribute("mvo");
 		      List<HashMap<String,Object>> fileLastNamePath=recipeService.getFavoriteInfo(mvo);
 		      model.addAttribute("fileLastNamePath",fileLastNamePath);
+		      /*model.addAttribute("recipeNoList", recipeNoList.size());*/
 		      return "favoriteView_recipe";
 		   }
 		   

@@ -9,25 +9,30 @@
 <br><br>
 <form method=post action="${initParam.root}registerBoard.do" id="registerBoardForm">
 <br><br>
-카테고리 : 
-                     <select name="category" id="category">
-                     <option value="">----</option>
-                     <option value="요리후기">요리 후기</option>
-                     <option value="자유게시판">자유게시판</option>
-                     <c:choose>
-                     	<c:when test="${sessionScope.mvo.level==6 }">
-                     <option value="공지사항">공지사항</option>	
-                     	</c:when>
-                     </c:choose>
-                  </select>
- 제목 <input type="text" name="title" id="title"  size="50" > &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- <%-- 닉네임 : ${sessionScope.mvo.nick} &nbsp;&nbsp;&nbsp; 아이디 : ${sessionScope.mvo.id} <br> --%>
-                  <br>   <br>
- <textarea rows="24" style="width:100%;" id="contents" name="contents"></textarea><br>
-<!-- 태그:<input type="text" name="items" id="items"  size="65" > -->
-<input type="hidden" name="memberId" value="${sessionScope.mvo.id}">
-<input type="hidden" name="nick" value="${sessionScope.mvo.nick}">
-<input type="button" id="registerBoard" value="등록"><br><br><br><br><br>
+<table>
+			<tr>
+				<td>카테고리 : <select name="category" id="category">
+						<option value="">----</option>
+						<option value="요리후기">요리 후기</option>
+						<option value="자유게시판">자유게시판</option>
+						<c:choose>
+							<c:when test="${sessionScope.mvo.level==6 }">
+								<option value="공지사항">공지사항</option>
+							</c:when>
+						</c:choose>
+				</select> 제목 <input type="text" name="title" id="title" size="50">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<textarea rows="24" style="width: 100%;" id="contents" name="contents"></textarea>
+			    </td>
+			</tr>
+
+		</table>
+	<input type="hidden" name="memberId" value="${sessionScope.mvo.id}">
+	<input type="hidden" name="nick" value="${sessionScope.mvo.nick}">
+	<input type="button" id="registerBoard" value="등록"><br><br><br><br><br>
 </form> 
 </center>
 <script type="text/javascript">
