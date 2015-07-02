@@ -1,6 +1,6 @@
 package org.dedeplz.fridge.model.recipe.paging;
 
-import org.dedeplz.fridge.common.CommonConstants;
+import org.dedeplz.fridge.model.common.CommonConstants;
 
 /**
  * 페이징 처리를 위한 비즈니스 클래스

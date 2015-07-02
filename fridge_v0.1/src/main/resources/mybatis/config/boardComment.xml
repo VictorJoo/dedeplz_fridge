@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Sql Mapper -->
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper  namespace="boardComment">
+   <resultMap type="bcvo" id="boardCommentRM">
+      <result property="commentNo" column="comment_no" />         
+      <result property="commentContents" column="comment_contents" />  
+      <result property="commentTime" column="comment_time"/>
+      <result property="commentNick" column="comment_nick" />         
+      <result property="commentBoardNo" column="comment_board_no" />  
+
+   </resultMap>
+    <!-- 자유게시판 댓글 등록 -->
+   <insert id="registerBoardComment" parameterType="bcvo">
+   <selectKey keyProperty="commentNo" resultType="int" order="BEFORE">
+       select board_comment_seq.nextval from dual
+   </selectKey>
+   insert into board_comment(comment_no,comment_contents,comment_time,comment_nick,comment_board_no)
+   values(#{commentNo},#{commentContents},sysdate,#{commentNick},#{commentBoardNo})
+   </insert>
+   
+   
+   <select id="getBoardCommentList" resultMap="boardCommentRM"  parameterType="int">
+    select * from board_comment where comment_board_no=#{value} order by comment_no asc
+   </select>
+   
+   <delete id="deleteBoardComment">
+      delete from board_comment where comment_no=#{value}
+   </delete>
+   
+   <update id="updateBoardComment" parameterType="bcvo">
+      update board_comment set comment_contents=#{commentContents} where comment_no=${commentNo}
+   </update> 
+   
+</mapper>

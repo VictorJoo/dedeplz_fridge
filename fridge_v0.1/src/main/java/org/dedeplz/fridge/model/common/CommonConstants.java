@@ -1,4 +1,4 @@
-package org.dedeplz.fridge.common;
+package org.dedeplz.fridge.model.common;
 
 public interface CommonConstants {
 	/**

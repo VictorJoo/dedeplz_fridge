@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.dedeplz.fridge.common.LoginCheck;
+import org.dedeplz.fridge.model.common.LoginCheck;
 import org.dedeplz.fridge.model.member.MemberVO;
 import org.dedeplz.fridge.model.recipe.FavoriteVO;
 import org.dedeplz.fridge.model.recipe.FileVO;

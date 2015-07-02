@@ -1,4 +1,4 @@
-package org.dedeplz.fridge.common;
+package org.dedeplz.fridge.model.common;
 
 import java.io.IOException;
 

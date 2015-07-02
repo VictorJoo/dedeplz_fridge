@@ -6,7 +6,7 @@ import java.util.List;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 
-import org.dedeplz.fridge.common.LoginCheck;
+import org.dedeplz.fridge.model.common.LoginCheck;
 import org.dedeplz.fridge.model.member.MemberVO;
 import org.dedeplz.fridge.model.recipe.RecipeCommentService;
 import org.dedeplz.fridge.model.recipe.RecipeCommentVO;

@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.dedeplz.fridge.common.LoginCheck;
 import org.dedeplz.fridge.model.board.BoardCommentService;
 import org.dedeplz.fridge.model.board.BoardService;
 import org.dedeplz.fridge.model.board.BoardVO;
 import org.dedeplz.fridge.model.board.FileVO;
 import org.dedeplz.fridge.model.board.paging.BoardListVO;
+import org.dedeplz.fridge.model.common.LoginCheck;
 import org.dedeplz.fridge.model.member.MemberVO;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
