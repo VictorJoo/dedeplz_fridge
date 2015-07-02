@@ -515,12 +515,18 @@ img#badImg {
 							dataType:"json",   
 							success:function(result){ 			
 								var favoriteInfo = "";
-								$.each(result.list,function(index,favorite){
-									favoriteInfo += "<tr><td><input type='checkbox' id='chkBox' name='chkBox' value='" + favorite.recipeNo + "'</td>";
-									favoriteInfo += "<td>" + (index + 1)+" </td>";
-									favoriteInfo += "<td>" + favorite.recipeTitle + "</td></tr>";
-								});
-								$("#favoriteView").html(favoriteInfo);
+								if(result.list != 0){
+									$.each(result.list,function(index,favorite){
+										favoriteInfo += "<tr><td><input type='checkbox' id='chkBox' name='chkBox' value='" + favorite.recipeNo + "'</td>";
+										favoriteInfo += "<td>" + (index + 1)+" </td>";
+										favoriteInfo += "<td>" + favorite.recipeTitle + "</td></tr>";
+									});
+									$("#favoriteView").html(favoriteInfo);
+								}else{
+									var infomation = "<br><br><center><h3>등록된 즐겨찾기가 없습니다. ^^</h3></center>";
+									$("#favorite").html(infomation);
+								}
+								
 							}
 						});// ajax
 					}
@@ -562,6 +568,10 @@ img#badImg {
 						});// ajax 
 					//}
 	            });//즐겨찾기 클릭 이벤트
+	            //홈 버튼
+	            $("#houseImg").click(function(){
+	            	location.href="home.do";
+	            });
 	            
 	          //board 등록
 	    		$("#registerBoard").click(function(){
@@ -633,15 +643,10 @@ function testAlert(path) {
         success:function(data){     
         	totalGood=data.totalGood;
         	totalBad=data.totalBad;
-        //비회원
+        //비회원        	
         $("#gogo").html(" <h2 class='heading'>"+data.rvo.title+"</h2><p>"+data.tag+"<br>요리시간 : "+data.rvo.cookingTime+"분  조회수 : " +data.rvo.hits+"</p>"
                 +data.rvo.contents
-        			+"<span id='totalGood' value='"+data.totalGood+"' style='font-size: 20px;'><img src='${initParam.root}/img/추천.jpg' id='goodImg'>&nbsp;&nbsp;"+data.totalGood+"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-        			+"<span id='totalBad' value='"+data.totalBad+"' style='font-size: 20px;'><img src='${initParam.root}/img/비추천.jpg' id='badImg'>&nbsp;&nbsp;"+data.totalBad+"</span><br><br>"
-        			+"<input type='hidden' id='gnbUseRecipeNo' value='"+data.rvo.recipeNo+"'>"
-        			+"<input type='hidden' id='gnbUseMemberId' value='"+data.rvo.memberId+"'>"	
-        );
-        //자기자신의 글
+        );        
         if("${sessionScope.mvo.id}"!=""){
 			//즐겨찾기 버튼
         	if(data.favoriteInfo==0){
@@ -653,21 +658,32 @@ function testAlert(path) {
   	          		"<div id='favoriteView'><img src='${initParam.root}/img/full_star.png' id='favoriteImg2'></div>"	
         	           );        		
           	}   
+        }
+        $("#gogo").append(       
+        			"<span id='totalGood' value='"+data.totalGood+"' style='font-size: 20px;'><img src='${initParam.root}/img/추천.jpg' id='goodImg'>&nbsp;&nbsp;"+data.totalGood+"</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
+        			+"<span id='totalBad' value='"+data.totalBad+"' style='font-size: 20px;'><img src='${initParam.root}/img/비추천.jpg' id='badImg'>&nbsp;&nbsp;"+data.totalBad+"</span><br><br>"
+        			+"<input type='hidden' id='gnbUseRecipeNo' value='"+data.rvo.recipeNo+"'>"
+        			+"<input type='hidden' id='gnbUseMemberId' value='"+data.rvo.memberId+"'>"	
+        );   
+        //회원의 view
+        if("${sessionScope.mvo.id}"!=""){			
+        	$("#gogo").append(         			 
+         			 "<a button type='button' class='btn btn-success btn-sm'   id='commentPopUp'  >댓글달기</a>  "	
+         	  );   
 			//자기의 글인지 아닌지 판단 하여 수정 삭제 가능 여부 버튼
         	if(data.rvo.memberId=="${sessionScope.mvo.id}"){
-        		$("#gogo").append("<a class='btn btn-danger' href='updateForm.do?recipeNo="+data.rvo.recipeNo+"'>수정하기</a>  "
-                        +"<a class='btn btn-danger' href='deleteRecipe.do?recipeNo="+data.rvo.recipeNo+"'>삭제하기</a>  "   
-                        +"<a button type='button' class='btn btn-success'   id='commentPopUp' >댓글달기</a>  "	
+        		$("#gogo").append(        				
+        				"<a class='btn btn-danger btn-sm' href='updateForm.do?recipeNo="
+        						+data.rvo.recipeNo+"' >수정</a>  "
+                        +"<a class='btn btn-danger btn-sm' href='deleteRecipe.do?recipeNo="
+                        		+data.rvo.recipeNo+"'>삭제</a> <br> "                         
      			);
-        	}else if(data.rvo.memberId!="${sessionScope.mvo.id}"){
-        		$("#gogo").append(
-           			 "<a button type='button' class='btn btn-success'   id='commentPopUp' >댓글달기</a>  "	
-           	  );
-        	}  	
+        	}
+        	
         }
         //닫기 버튼
         $("#gogo").append(
-        		 "<button type='button' class='btn btn-primary' data-dismiss='modal'>"
+        		 "<br><br><br><br><button type='button' class='btn btn-primary' data-dismiss='modal'>"
                  +"<i class='fa fa-times'></i> Close</button>"	
 	           );
         

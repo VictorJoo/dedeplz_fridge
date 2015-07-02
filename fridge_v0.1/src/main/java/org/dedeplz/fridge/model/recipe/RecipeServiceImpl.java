@@ -334,7 +334,7 @@ public class RecipeServiceImpl implements RecipeService{
 	      favoriteMap.put("id", id);
 	      List<FavoriteVO> favoriteList=recipeDAO.getFavoriteRecipeList(favoriteMap);
 	      System.out.println(favoriteList);
-	      int total=recipeDAO.totalContent();
+	      int total=recipeDAO.totalFavoriteContent(id);
 	      PagingBean paging=new PagingBean(total,Integer.parseInt(pageNo));
 	      FavoriteListVO lvo=new FavoriteListVO(favoriteList,paging);
 	      return lvo;

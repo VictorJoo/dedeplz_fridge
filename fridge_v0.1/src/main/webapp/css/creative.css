@@ -323,6 +323,16 @@ header .header-content .header-content-inner p {
     transition: all .35s;
 }
 
+.portfolio-box .portfolio-best-caption {
+    display: block;
+    position: absolute;
+    top: 0;    
+    
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s;
+}
+
 .portfolio-box .portfolio-box-caption .portfolio-box-caption-content {
     position: absolute;
     top: 50%;

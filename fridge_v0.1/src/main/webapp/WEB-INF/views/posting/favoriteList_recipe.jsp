@@ -3,6 +3,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <h3>${sessionScope.mvo.nick} 님의 favoriteList</h3>
 ${requestScope.result }
+<c:choose>
+<c:when test="${requestScope.lvo.list.size()!=0}">
+<div id="favorite">
 <table border="1" style="width: 100%">
       <tr align="center">
          <td width="5%"></td>
@@ -22,51 +25,46 @@ ${requestScope.result }
    </c:forEach>
    </tbody>
 </table>
-<c:set var="pb" value="${requestScope.lvo.pagingBean}"></c:set>
-    <%-- 페이징빈의 getNowPage에 접근하여 출력 --%>
-<!-- 
-         step2 1) 이전 페이지 그룹이 있으면 이미지 보여준다. (img/left_arrow_btn.gif)
-                     페이징빈의 previousPageGroup 이용 
-               2)  이미지에 이전 그룹의 마지막 페이지번호를 링크한다. 
-                      hint)   startPageOfPageGroup-1 하면 됨        
-    -->      
-   <c:if test="${pb.previousPageGroup}">
-   <a href="favoriteRecipeList.do?pageNo=${pb.startPageOfPageGroup-1}">
-   <!-- <img src="img/left_arrow_btn.gif"> -->
-   ◀&nbsp; </a>   
-   </c:if>
-   <!-- step1. 1)현 페이지 그룹의 startPage부터 endPage까지 forEach 를 이용해 출력한다
-               2) 현 페이지가 아니면 링크를 걸어서 서버에 요청할 수 있도록 한다.
-                  현 페이지이면 링크를 처리하지 않는다.  
-                  PagingBean의 nowPage
-                  jstl choose 를 이용  
-                  예) <a href="DispatcherServlet?command=list&pageNo=...">               
-    -->      
-   <c:forEach var="i" begin="${pb.startPageOfPageGroup}" 
-   end="${pb.endPageOfPageGroup}">
-   <c:choose>
-   <c:when test="${pb.nowPage!=i}">
-   <a href="favoriteRecipeList.do?pageNo=${i}">${i}</a> 
-   </c:when>
-   <c:otherwise>
-   ${i}
-   </c:otherwise>
-   </c:choose>
-   &nbsp;
-   </c:forEach>    
-   <!-- 
-         step3 1) 다음 페이지 그룹이 있으면 이미지(img/right_arrow_btn.gif) 보여준다. 
-                     페이징빈의 nextPageGroup 이용 
-               2)  이미지에 이전 그룹의 마지막 페이지번호를 링크한다. 
-                      hint)   endPageOfPageGroup+1 하면 됨        
-    -->   
-   <c:if test="${pb.nextPageGroup}">
-   <a href="favoriteRecipeList.do?pageNo=${pb.endPageOfPageGroup+1}">
-   ▶<!-- <img src="img/right_arrow_btn.gif"> --></a>
-   </c:if>
+<ul class="pagination">
+
+					<c:if test="${requestScope.lvo.pagingBean.previousPageGroup}">
+						<li><a
+							href="${initParam.root}favoriteRecipeList.do?pageNo=${requestScope.lvo.pagingBean.startPageOfPageGroup-1}">Prev</a>
+						</li>
+					</c:if>
+					<c:forEach var="i"
+						begin="${requestScope.lvo.pagingBean.startPageOfPageGroup}"
+						end="${requestScope.lvo.pagingBean.endPageOfPageGroup}">
+						<c:choose>
+							<c:when test="${requestScope.lvo.pagingBean.nowPage!=i}">
+								<li><a
+									href="${initParam.root}favoriteRecipeList.do?pageNo=${i}">${i}</a>
+								</li>
+							</c:when>
+							<c:otherwise>
+								<li><a href="#">${i}</a></li>
+							</c:otherwise>
+						</c:choose>
+					</c:forEach>
+					<c:if test="${requestScope.lvo.pagingBean.nextPageGroup}">
+						<li><a
+							href="favoriteRecipeList.do?pageNo=${requestScope.lvo.pagingBean.endPageOfPageGroup+1}">Next</a>
+						</li>
+					</c:if>
+				</ul>
 <br>
 <div style="float:right;">
 <input type="button" id="allCheckBtn" value="전체선택">
 <input type="button" id="resetBtn" value="초기화">
 <input type="button" id="delBtn" value="삭제">
 </div>
+</div>
+</c:when>
+<c:otherwise>
+<br><br>
+	<center><h3>등록된 즐겨찾기가 없습니다. ^^</h3></center>
+</c:otherwise>
+</c:choose>
+<br><br><br><br><br>
+	<center><img src='${initParam.root}/img/house.JPG' id='houseImg'width='50' height='50'></center>
+<br>	<br>

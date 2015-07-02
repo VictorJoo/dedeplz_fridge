@@ -16,7 +16,7 @@
    <!-- 합성 -->
 
    <c:forEach var="path" items="${requestScope.fileLastNamePath}">
-             <div class="col-md-3 col-sm-6">
+             <div class="col-md-3 col-sm-6" style="padding: 0px;">
                     <a href="#portfolioModal1" class="portfolio-box" data-toggle="modal" onclick="testAlert('${path.fileLastPath}')"> 
                         <img src="${path.fileLastPath}" class="img-responsive" style="width: 350px; height: 220px;">
                          <div class="portfolio-box-caption">
@@ -33,7 +33,6 @@
                         </div>
                         
                     </a>
-                   <br>
                 </div>
                   </c:forEach>
                 

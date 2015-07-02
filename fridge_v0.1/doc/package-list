@@ -1,0 +1,9 @@
+org.dedeplz.fridge.common
+org.dedeplz.fridge.controller.board
+org.dedeplz.fridge.controller.member
+org.dedeplz.fridge.controller.recipe
+org.dedeplz.fridge.model.board
+org.dedeplz.fridge.model.board.paging
+org.dedeplz.fridge.model.member
+org.dedeplz.fridge.model.recipe
+org.dedeplz.fridge.model.recipe.paging

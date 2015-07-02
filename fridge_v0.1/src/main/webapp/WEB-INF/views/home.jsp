@@ -72,19 +72,23 @@ var maxCount=40;
 	<div class="col-md-4 col-sm-6" style=" padding: 0px; height: auto;">
 		<a href="#portfolioModal1" class="portfolio-box" data-toggle="modal" onclick="testAlert('${topPath.fileLastPath}')" > 
 		<img src="${topPath.fileLastPath}" class="img-responsive" style="width: 500px; height: 300px;">
-			<div class="portfolio-box-caption">
-				<div class="portfolio-box-caption-content">
-					<div class="project-category text-faded">
-					<c:set var="topCount" value="${topCount+1 }"/>
-					${topCount }위 <br>
-					${topPath.rvo.nick }님의 recipe
-					</div>
-					<div class="project-name">${topPath.rvo.title}
-					</div>
-					<div>
-					<br>
-					 <img src="img/comment.jpg"> ${topPath.commentCount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					 <img src="img/love.jpg"> ${topPath.goodPoint}
+		<c:set var="topCount" value="${topCount+1 }"/>
+			<div class="portfolio-best-caption">
+				 <img src="img/best${topCount }.jpg" width="80"/> 
+			</div>
+				<div class="portfolio-box-caption">
+					<div class="portfolio-box-caption-content">
+						<div class="project-category text-faded">
+						${topCount }위 <br>
+						${topPath.rvo.nick }님의 recipe
+						</div>
+						<div class="project-name">${topPath.rvo.title}
+						</div>
+						<div>
+						<br>
+						 <img src="img/comment.jpg"> ${topPath.commentCount}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						 <img src="img/love.jpg"> ${topPath.goodPoint}
+						
 					</div>
 				</div>
 			</div>

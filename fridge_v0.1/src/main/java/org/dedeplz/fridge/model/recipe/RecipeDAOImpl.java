@@ -389,4 +389,11 @@ public class RecipeDAOImpl implements RecipeDAO {
 	   public List<String> getFavoriteListByMemberId(String id) {
 	      return sqlSessionTemplate.selectList("recipe.getFavoriteListByMemberId", id);
 	   }
+		/**
+		 * 아이디에 해당하는 즐겨찾기 갯수 갖고온다.
+		 */
+		@Override
+		public int totalFavoriteContent(String id) {
+			return sqlSessionTemplate.selectOne("recipe.totalFavoriteContent", id);
+		}
 }
