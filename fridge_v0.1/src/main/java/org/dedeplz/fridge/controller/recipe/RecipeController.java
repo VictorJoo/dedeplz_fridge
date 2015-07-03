@@ -208,9 +208,8 @@ public class RecipeController {
 	@LoginCheck
 	@RequestMapping("deleteRecipe.do")
 	@Transactional
-	public ModelAndView deleteForm(RecipeVO rvo, HttpSession session) {
-		MemberVO mvo = (MemberVO) session.getAttribute("mvo");
-		String id = mvo.getId();
+	public ModelAndView deleteForm(RecipeVO rvo) {
+		String id = rvo.getMemberId();
 		int recipeNo=rvo.getRecipeNo();
 		recipeService.deleteRecipeAll(id,recipeNo);
 		return home();

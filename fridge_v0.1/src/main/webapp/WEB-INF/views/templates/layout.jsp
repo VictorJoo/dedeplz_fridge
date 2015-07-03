@@ -825,12 +825,12 @@ function testAlert(path) {
         				"<a class='btn btn-danger btn-sm' href='updateForm.do?recipeNo="
         						+data.rvo.recipeNo+"' >수정</a>  "
                         +"<a class='btn btn-danger btn-sm' href='deleteRecipe.do?recipeNo="
-                        		+data.rvo.recipeNo+"'>삭제</a> <br> "                         
+                       			 +data.rvo.recipeNo+"&memberId="+data.rvo.memberId+"''>삭제</a> <br> "                         
      			);
         	}else if("${sessionScope.mvo.level}"==6){
         		$("#gogo").append(        				        				
                         "<a class='btn btn-danger btn-sm' href='deleteRecipe.do?recipeNo="
-                        		+data.rvo.recipeNo+"'>삭제</a> <br> "                         
+                        		+data.rvo.recipeNo+"&memberId="+data.rvo.memberId+"''>삭제</a> <br> "                         
      			);
         	}
         	

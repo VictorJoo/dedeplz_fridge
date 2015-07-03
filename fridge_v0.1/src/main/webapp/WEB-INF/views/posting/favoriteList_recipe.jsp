@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+   pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <center>
 <br><br>
@@ -89,5 +89,5 @@ ${requestScope.result }
 </c:otherwise>
 </c:choose>
 <br><br><br><br><br>
-	<center><img src='${initParam.root}/img/house.JPG' id='houseImg'width='50' height='50'></center>
+	<%-- <center><img src='${initParam.root}/img/house.JPG' id='houseImg'width='50' height='50'></center> --%>
 <br>	<br>
