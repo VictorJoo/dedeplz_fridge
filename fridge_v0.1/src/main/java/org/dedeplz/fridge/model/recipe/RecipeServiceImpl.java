@@ -232,20 +232,20 @@ public class RecipeServiceImpl implements RecipeService{
 	@Transactional
 	public void deleteRecipeAll(String id,int recipeNo) {
 		List<String> list = recipeDAO.getFileName(recipeNo);
-		File file = new File(path + "\\" + id);
+		File file = new File(path + id);
 		File f[] = file.listFiles();
-
-		System.out.println("파일 리스트:" + file);
-		System.out.println("파일 : " + f);
-		for (int i = 0; i < list.size(); i++) {
-			for (int y = 0; y < f.length; y++) {
-				if (f[y].getName().equals(list.get(i))) {
-					f[y].delete();
-				}//if
+		if(f.length!=0){
+			for (int i = 0; i < list.size(); i++) {
+				for (int y = 0; y < f.length; y++) {
+					if (f[y].getName().equals(list.get(i))) {
+						f[y].delete();
+					}//if
+				}//for
 			}//for
-		}//for
+		}	
 		int gnBNoAllCount=recipeDAO.getGoodAndBadNoCountByRecipeNo(recipeNo);
 		int favoriteNoAllCount=recipeDAO.getFavoriteNoAllList(recipeNo);
+		List<Integer> recipeCommentNoList=recipeDAO.getCommentNoListByRecipeNo(recipeNo);
 		recipeDAO.deleteRecipeFile(recipeNo);
 		recipeDAO.deleteRecipeItem(recipeNo);
 		if(gnBNoAllCount!=0){
@@ -253,6 +253,11 @@ public class RecipeServiceImpl implements RecipeService{
 		}
 		if(favoriteNoAllCount!=0){
 			recipeDAO.deleteFavorites(recipeNo);
+		}
+		if(recipeCommentNoList!=null){
+			for(int i=0;i<recipeCommentNoList.size();i++){
+				recipeDAO.deleteRecipeCommentByCommentNo(recipeCommentNoList.get(i));
+			}
 		}
 		recipeDAO.deleteRecipe(recipeNo);
 	}
@@ -522,7 +527,22 @@ public class RecipeServiceImpl implements RecipeService{
 		}
 		return fileLastNamePath;
 	}
-	
+	/**
+	 * 닉네임으로 해당 댓글의 모든 commentNo를 
+	 * 받아온다
+	 */
+	@Override
+	public List<Integer> getMyCommentNoListByNick(String nick) {
+		return recipeDAO.getMyCommentNoListByNick(nick);
+	}
+	/**
+	 * commentNo를 이용
+	 * 정보를 삭제
+	 */
+	@Override
+	public void deleteAllRecipeCommentByCommnetNo(int commentNo) {
+		recipeDAO.deleteRecipeCommentByCommentNo(commentNo);
+	}
 	
 	
 }

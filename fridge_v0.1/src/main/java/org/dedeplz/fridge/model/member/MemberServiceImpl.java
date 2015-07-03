@@ -4,15 +4,25 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.dedeplz.fridge.model.board.BoardCommentService;
+import org.dedeplz.fridge.model.board.BoardService;
 import org.dedeplz.fridge.model.recipe.RecipeDAO;
+import org.dedeplz.fridge.model.recipe.RecipeService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class MemberServiceImpl implements MemberService {
-    @Resource
-   private MemberDAO memberDAO;
-      @Resource
-      private RecipeDAO recipeDAO;
+	@Resource
+	private MemberDAO memberDAO;
+	@Resource
+	private RecipeDAO recipeDAO;
+	@Resource
+	private RecipeService recipeService;
+	@Resource
+	private BoardService boardService;
+	@Resource
+	private BoardCommentService boardCommentService;
     /* (non-Javadoc)
     * @see org.dedeplz.fridge.model.MemberService#allMember()
    */
@@ -137,4 +147,29 @@ public class MemberServiceImpl implements MemberService {
       memberDAO.updateMemberLove(mvo);
 
    }
+   
+   /**
+	 * 회원탈퇴 회원이 등록한 정보를 삭제
+	 */
+	@Override
+	@Transactional
+	public void deleteAllMemberInfo(MemberVO mvo) {	
+		List<String> recipeNoList = recipeService.getMyRecipeList(mvo.getId());
+		List<Integer> commentNoList = recipeService.getMyCommentNoListByNick(mvo.getNick());
+		for (int y = 0; y < commentNoList.size(); y++) {
+			recipeService.deleteAllRecipeCommentByCommnetNo(commentNoList.get(y));
+		}
+		for (int i = 0; i < recipeNoList.size(); i++) {
+			recipeService.deleteRecipeAll(mvo.getId(), Integer.parseInt(recipeNoList.get(i)));
+		}
+		List<Integer> boardCommentList = boardCommentService.getMyBoardCommentList(mvo.getNick());
+		for (int i = 0; i < boardCommentList.size(); i++) {
+			boardCommentService.deleteBoardComment(boardCommentList.get(i));
+		}
+		List<Integer> boardList = boardService.getMyBoardList(mvo.getId());
+		for (int i = 0; i < boardList.size(); i++) {
+			boardService.deleteBoardAll(boardList.get(i));
+		}
+		memberDAO.deleteMember(mvo);
+	}
 }

@@ -43,5 +43,13 @@ public class BoardCommentDAOImpl implements BoardCommentDAO{
 	public void updateBoardComment(BoardCommentVO bcvo) {
 		 sqlSessionTemplate.update("boardComment.updateBoardComment",bcvo);
 	}
+	
+	/**
+	    * 자유게시판 자신이 쓴 모든 댓글 번호 가져오기 (탈퇴할때)
+	    */
+	   @Override
+	   public List<Integer> getMyBoardCommentList(String nick) {
+	      return sqlSessionTemplate.selectList("boardComment.getMyBoardCommentList",nick);
+	   }
 
 }

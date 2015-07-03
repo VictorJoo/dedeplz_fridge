@@ -396,4 +396,30 @@ public class RecipeDAOImpl implements RecipeDAO {
 		public int totalFavoriteContent(String id) {
 			return sqlSessionTemplate.selectOne("recipe.totalFavoriteContent", id);
 		}
+		/**
+		 * 레시피 번호를 이용
+		 * 해당 레시피에 존재하는 댓글의 모든 번호를
+		 * 받아온다
+		 */
+		@Override
+		public List<Integer> getCommentNoListByRecipeNo(int recipeNo) {
+			return sqlSessionTemplate.selectList("recipeComment.getCommentNoListByRecipeNo",recipeNo);
+		}
+		/**
+		 * commentNo를 이용
+		 * 해당 댓글을 삭제
+		 */
+		@Override
+		public void deleteRecipeCommentByCommentNo(int commentNo) {
+			sqlSessionTemplate.delete("recipeComment.deleteRecipeCommentByCommentNo",commentNo);	
+		}
+		/**
+		 * 닉네임을 이용
+		 * 해당 닉네임으로 작성된 모든 댓글의
+		 * 번호를 받아온다.
+		 */
+		@Override
+		public List<Integer> getMyCommentNoListByNick(String nick) {
+			return sqlSessionTemplate.selectList("recipeComment.getMyCommentNoListById", nick);
+		}
 }

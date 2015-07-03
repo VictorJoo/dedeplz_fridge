@@ -21,17 +21,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    values(#{commentNo},#{commentContents},sysdate,#{commentNick},#{commentBoardNo})
    </insert>
    
-   
+      <!-- 자유게시판 댓글 전체 리스트 -->
    <select id="getBoardCommentList" resultMap="boardCommentRM"  parameterType="int">
     select * from board_comment where comment_board_no=#{value} order by comment_no asc
    </select>
    
+       <!-- 자유게시판 해당 댓글 삭제 -->
    <delete id="deleteBoardComment">
       delete from board_comment where comment_no=#{value}
    </delete>
    
+      <!-- 자유게시판 해당 댓글 수정 -->
    <update id="updateBoardComment" parameterType="bcvo">
       update board_comment set comment_contents=#{commentContents} where comment_no=${commentNo}
    </update> 
+   
+      <!-- 자신이 쓴 자유게시판 댓글 번호 가져오기 -->
+   <select id="getMyBoardCommentList" resultType="int">
+    select comment_no from board_comment where comment_nick=#{value}
+   </select> 
    
 </mapper>

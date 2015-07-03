@@ -216,4 +216,13 @@ public class BoardServiceImpl implements BoardService {
 			return result;
 		}
 		
+		 /**
+	       * 나의 자유게시판 글 번호 가져오기
+	       */
+	      @Override
+	      public List<Integer> getMyBoardList(String id) {
+	      //return sqlSessionTemplate.selectList("recipe.getMyRecipeList", id);
+
+	         return boardDAO.getMyBoardList(id);
+	      }
 }

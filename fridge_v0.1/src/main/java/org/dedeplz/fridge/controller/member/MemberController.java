@@ -1,7 +1,5 @@
 package org.dedeplz.fridge.controller.member;
 
-import java.util.List;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -252,18 +250,13 @@ public class MemberController {
          if (mvo == null) {
             return "member_password_check_fail";
          } else{
-            List<String> list=recipeService.getMyRecipeList(mvo.getId());
-            for(int i=0;i<list.size();i++){
-               recipeService.deleteRecipeAll(mvo.getId(),Integer.parseInt(list.get(i)));
-            }
-            memberService.deleteMember(mvo);
-         }
-            
-         HttpSession session = request.getSession(false);
-         if (session != null)
+        	memberService.deleteAllMemberInfo(mvo);
+        	HttpSession session = request.getSession(false);
+        	if (session != null)
             session.invalidate();
+         }
          return "member_delete_result";
-      }   
+      }  
       /**
        * 내 아이디 찾기
        */

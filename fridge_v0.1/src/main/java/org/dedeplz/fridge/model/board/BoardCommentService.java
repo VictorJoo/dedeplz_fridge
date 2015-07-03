@@ -12,4 +12,6 @@ public interface BoardCommentService {
 
 	public void updateBoardComment(BoardCommentVO bcvo);
 
+	public List<Integer> getMyBoardCommentList(String nick);
+
 }

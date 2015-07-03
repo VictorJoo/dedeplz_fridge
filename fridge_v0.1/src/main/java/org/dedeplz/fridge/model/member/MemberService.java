@@ -30,4 +30,6 @@ public interface MemberService {
 
      public void updateMemberLove(MemberVO mvo);
 
+     public void deleteAllMemberInfo(MemberVO mvo);
+
 }

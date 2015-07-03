@@ -51,5 +51,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    <update id="updateRecomment"  parameterType="rcvo">
    update recipe_comment set comment_contents=#{commentContents} where comment_no=#{commentNo}
    </update>
-   
+      <select id="getCommentNoListByRecipeNo" resultType="int">
+   		select comment_no from recipe_comment where comment_recipe_no=#{value}
+   </select>
+   <delete id="deleteRecipeCommentByCommentNo">
+   		delete from recipe_comment where comment_no=#{value}
+   </delete>
+   <select id="getMyCommentNoListById" resultType="int">
+   		select comment_no from recipe_comment where comment_nick=#{value}
+   </select>
 </mapper>

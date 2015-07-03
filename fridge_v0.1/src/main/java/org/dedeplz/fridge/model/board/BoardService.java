@@ -34,6 +34,8 @@ public interface BoardService {
 	public BoardListVO getSearchByWriterList(String pageNo, String nick);
 
 	public List<FileVO> getFvoList(String contents);
+
+	public List<Integer> getMyBoardList(String id);
 	
 
 	

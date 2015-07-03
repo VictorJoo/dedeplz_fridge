@@ -143,7 +143,15 @@ public class BoardDAOImpl implements BoardDAO {
 	   public int getTotalSearchByContentsCount(String contents) {
 	      return sqlSessionTemplate.selectOne("board.getTotalSearchByContentsCount",contents);
 	   }
-
+	   
+	   /**
+	       * 자신의 자유게시판 글번호가져오기
+	       */
+	   @Override
+	   public List<Integer> getMyBoardList(String id) {
+	      return sqlSessionTemplate.selectList("board.getMyBoardList", id);
+	   }
+	
 	
 
 }

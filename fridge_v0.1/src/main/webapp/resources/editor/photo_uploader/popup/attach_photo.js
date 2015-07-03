@@ -333,7 +333,7 @@
     function html5Upload() {	
     	var tempFile,
     		sUploadURL;
-    	sUploadURL= 'http://localhost:8888/fridge_v0.1/multiplePhotoUpload.do'; 	//upload URL
+    	sUploadURL= 'http://192.168.7.220:8888/fridge_v0.1/multiplePhotoUpload.do'; 	//upload URL
     	
     	//파일을 하나씩 보내고, 결과를 받음.
     	for(var j=0, k=0; j < nImageInfoCnt; j++) {

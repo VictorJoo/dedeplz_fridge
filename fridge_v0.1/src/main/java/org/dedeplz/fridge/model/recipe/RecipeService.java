@@ -40,5 +40,7 @@ public interface RecipeService {
 	public HashMap<String, Object> checkGoodAndBad(String memberId, int recipeNo);
 	public List<HashMap<String, Object>> getFavoriteInfo(MemberVO mvo);
 	public Map<String, Object> getMyRecipeInfo(String id);
+	public void deleteAllRecipeCommentByCommnetNo(int commentNo);
+	public List<Integer> getMyCommentNoListByNick(String nick);
 	
 }

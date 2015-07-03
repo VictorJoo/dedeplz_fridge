@@ -51,4 +51,7 @@ public interface RecipeDAO {
 	public int getCountOfCommentByRecipeNo(int recipeNo);
 	public List<String> getFavoriteListByMemberId(String id);
 	public int totalFavoriteContent(String id);
+	public List<Integer> getCommentNoListByRecipeNo(int recipeNo);
+	public void deleteRecipeCommentByCommentNo(int commentNo);
+	public List<Integer> getMyCommentNoListByNick(String nick);
 }

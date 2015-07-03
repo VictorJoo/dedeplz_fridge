@@ -13,7 +13,7 @@
    </div>
 </form>
    
- <c:if test="${fileLastNamePath==0}">
+<%--  <c:if test="${fileLastNamePath==0}">
 	<div class="cover">
 		<div class="cover-image"></div>
 		<div class="container">
@@ -23,7 +23,7 @@
 					<h2><strong>선택하신 메뉴에 대한 RECIPE가 없습니다.</strong></h2>
 					<br>
 					<h4>
-						<br>자신만의 새로운 RECIPE를 만들어 보세요옹!
+						<br>자신만의 새로운 RECIPE를 만들어 보세요!
 					</h4>
 					<br> 
 						<c:choose>
@@ -39,7 +39,7 @@
 			</div>
 		</div>
 	</div>
-</c:if>
+</c:if> --%>
    <c:forEach var="path" items="${requestScope.fileLastNamePath}">
              <div class="col-md-3 col-sm-6" style="padding: 0px;">
                     <a href="#portfolioModal1" class="portfolio-box" data-toggle="modal" onclick="testAlert('${path.fileLastPath}')"> 
