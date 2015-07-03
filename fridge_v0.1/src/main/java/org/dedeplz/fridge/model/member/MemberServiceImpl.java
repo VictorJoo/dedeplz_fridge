@@ -65,10 +65,10 @@ public class MemberServiceImpl implements MemberService {
    /**
     * 회원 탈퇴
     */
-      @Override
+/*      @Override
       public void deleteMember(MemberVO vo) {
          memberDAO.deleteMember(vo);
-      }
+      }*/
    /**
     * 닉네임 중복체크
    */

@@ -28,7 +28,7 @@ public class AdminController {
 	   */
 	  @RequestMapping("admin_outMember.do")
 	  public String outMemeber(MemberVO vo ){
-		  memberService.deleteMember(vo);
+		  memberService.deleteAllMemberInfo(vo);
 		  return "redirect:admin_adminpage.do";
 	  }
 	  /**
