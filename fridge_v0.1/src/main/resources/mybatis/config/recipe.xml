@@ -176,9 +176,26 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       <select id="totalFavoriteContent" resultType="int">
    		select count(*) from favorites where member_id = #{value}
    </select>
+   <select id="getMyGoodAndBadN0List" resultType="int">
+   		select gnb_no from good_n_bad where member_id=#{value}
+   </select>
+   <select id="getMyFavoriteNoList" resultType="int">
+   		select favorites_no from favorites where member_id=#{value}
+   </select>
+   <delete id="deleteGoobAndBadAll">
+ 	  delete from good_n_bad where gnb_no=#{value}
+   </delete>
+   <delete id="deletefavoriteAll">
+  	 delete from favorites where favorites_no =#{value}
+   </delete>
+   <update id="updateRecipeNickName" parameterType="map">
+    update recipe set nick=#{nick} where recipe_no=#{recipeNo}
+   </update>
+   
+   <select id="getItamListByPart" parameterType="String" resultType="String">
+   		select item_name from item where item_name like '%${value}%'
+   </select>
 </mapper>
-
- 
  
  
  

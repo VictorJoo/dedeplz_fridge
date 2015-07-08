@@ -22,14 +22,15 @@ var maxCount=40;
 		}
 	 count = count+20;
 
-   }
+   };
 </script>
 
 
 <form action="searchRecipe.do">
 	<div class="form-group">
 		<div class="input-group">
-			<input type="text" class="form-control" placeholder="Enter your items" name="items"  style="background-color: #e2e2e2;"> 
+			<input type="text" class="form-control" placeholder="Enter your items" name="items"  style="background-color: #e2e2e2;"
+			id="autocomplete"> 
 			<span class="input-group-btn"> 
 			<button class="btn btn-primary" type="submit">
 			<i class="fa fa-fw fa-spoon"></i>search</button>

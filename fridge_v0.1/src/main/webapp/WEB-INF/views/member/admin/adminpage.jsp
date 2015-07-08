@@ -72,7 +72,7 @@
                         <td>${mvo.registerDate }</td>
                         <td><c:choose>
                               <c:when test="${mvo.level!=6 }">
-                                 <input type="button" value="삭제"
+                                 <input type="button" value="탈퇴"
                                     onclick="deleteMember('${mvo.id }','${mvo.nick }')">
                               </c:when>
                            </c:choose></td>

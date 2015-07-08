@@ -61,6 +61,7 @@ public class MemberServiceImpl implements MemberService {
    public void updateMember(MemberVO vo) {
       System.out.println("updateServiceImpl");
       memberDAO.updateMember(vo);
+      recipeService.updateRecipeNickName(vo);
    }
    /**
     * 회원 탈퇴
@@ -156,20 +157,41 @@ public class MemberServiceImpl implements MemberService {
 	public void deleteAllMemberInfo(MemberVO mvo) {	
 		List<String> recipeNoList = recipeService.getMyRecipeList(mvo.getId());
 		List<Integer> commentNoList = recipeService.getMyCommentNoListByNick(mvo.getNick());
-		for (int y = 0; y < commentNoList.size(); y++) {
-			recipeService.deleteAllRecipeCommentByCommnetNo(commentNoList.get(y));
-		}
-		for (int i = 0; i < recipeNoList.size(); i++) {
-			recipeService.deleteRecipeAll(mvo.getId(), Integer.parseInt(recipeNoList.get(i)));
-		}
 		List<Integer> boardCommentList = boardCommentService.getMyBoardCommentList(mvo.getNick());
-		for (int i = 0; i < boardCommentList.size(); i++) {
-			boardCommentService.deleteBoardComment(boardCommentList.get(i));
-		}
 		List<Integer> boardList = boardService.getMyBoardList(mvo.getId());
-		for (int i = 0; i < boardList.size(); i++) {
-			boardService.deleteBoardAll(boardList.get(i));
+		List<Integer> goobAndBadList=recipeService.getMyGoodAndBadN0List(mvo.getId());
+		List<Integer> favoriteList =recipeService.getMyFavoriteNoList(mvo.getId());
+		if(commentNoList!=null){
+			for (int y = 0; y < commentNoList.size(); y++) {
+				recipeService.deleteAllRecipeCommentByCommnetNo(commentNoList.get(y));
+			}
+		}
+		if(goobAndBadList!=null){
+			for (int i = 0; i < goobAndBadList.size(); i++) {
+				recipeService.deleteGoobAndBadAll(goobAndBadList.get(i));
+			}
+		}
+		if(favoriteList!=null){
+			for (int i = 0; i < favoriteList.size(); i++) {
+				recipeService.deletefavoriteAll(favoriteList.get(i));
+			}
+		
+		if(recipeNoList!=null){
+			for (int i = 0; i < recipeNoList.size(); i++) {
+				recipeService.deleteRecipeAll(mvo.getId(), Integer.parseInt(recipeNoList.get(i)));
+			}
+		}
+		if(boardCommentList!=null){
+			for (int i = 0; i < boardCommentList.size(); i++) {
+				boardCommentService.deleteBoardComment(boardCommentList.get(i));
+			}
+		}
+		if(boardList!=null){
+			for (int i = 0; i < boardList.size(); i++) {
+				boardService.deleteBoardAll(boardList.get(i));
+			}
 		}
 		memberDAO.deleteMember(mvo);
 	}
+}
 }

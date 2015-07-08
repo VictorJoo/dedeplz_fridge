@@ -54,4 +54,10 @@ public interface RecipeDAO {
 	public List<Integer> getCommentNoListByRecipeNo(int recipeNo);
 	public void deleteRecipeCommentByCommentNo(int commentNo);
 	public List<Integer> getMyCommentNoListByNick(String nick);
+	public List<Integer> getMyGoodAndBadN0List(String id);
+	public List<Integer> getMyFavoriteNoList(String id);
+	public void deleteGoobAndBadAll(int gnbNo);
+	public void deletefavoriteAll(int favoriteNo);
+	public void updateRecipeNickName(Map<String, Object> map);
+	public List<String> getItamListByPart(String value);
 }

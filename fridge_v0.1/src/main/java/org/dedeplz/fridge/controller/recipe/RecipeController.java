@@ -28,6 +28,7 @@ import org.dedeplz.fridge.model.recipe.FileVO;
 import org.dedeplz.fridge.model.recipe.RecipeService;
 import org.dedeplz.fridge.model.recipe.RecipeVO;
 import org.dedeplz.fridge.model.recipe.paging.FavoriteListVO;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -48,12 +49,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class RecipeController {
 	@Resource(name = "recipeServiceImpl")
 	private RecipeService recipeService;
+	
 	@Resource(name = "uploadPath")
 	private String path;
-	
-	/**
-	 * multiplePhotoUpload 메서드의 FileVO값을 저장
-	 */
 	/**
 	 * 메인 페이지에 레시피 마지막 사진을 전송
 	 * 
@@ -62,40 +60,43 @@ public class RecipeController {
 	 */
 	@RequestMapping("home.do")
 	public ModelAndView home() {
-		//전체 레시피 리스트
+		// 전체 레시피 리스트
 		List<String> recipeNoList = recipeService.getAllRecipeNo();
-		List<HashMap<String,Object>> fileLastNamePath=recipeService.getFileLastNamePath();
-		List<HashMap<String,Object>> topFileLastNamePath=recipeService.getTopFileLastNamePath();
+		List<HashMap<String, Object>> fileLastNamePath = recipeService.getFileLastNamePath();
+		List<HashMap<String, Object>> topFileLastNamePath = recipeService	.getTopFileLastNamePath();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("recipeNoList", recipeNoList.size());
-		resultMap.put("filePath",fileLastNamePath);
+		resultMap.put("filePath", fileLastNamePath);
 		resultMap.put("topFileInfo", topFileLastNamePath);
 		System.out.println(fileLastNamePath);
 		return new ModelAndView("home", "total", resultMap);
 	}
-	
+
 	/**
 	 * 재료 기반 레시피 검색
+	 * 
 	 * @param items
 	 * @return
 	 */
-    @RequestMapping("searchRecipe.do")
-    public ModelAndView searchRecipe(String items){
-    	Map<String, Object> resultMap=recipeService.getSearchRecipeInfo(items);
-       return new ModelAndView("home", "total", resultMap);
-     }
-    
-    /**
-     * 내가 등록한 레시피정보를 가지고 있는 리스트를 가져와 home 화면에 출력한다.
-     * @param id
-     * @return
-     */
-    @RequestMapping("getMyRecipeInfo.do")
-    public ModelAndView getMyRecipeInfo(HttpSession session){
-    	MemberVO mvo = (MemberVO) session.getAttribute("mvo");
-    	Map<String, Object> resultMap=recipeService.getMyRecipeInfo(mvo.getId());
-       return new ModelAndView("home", "total", resultMap);
-     }
+	@RequestMapping("searchRecipe.do")
+	public ModelAndView searchRecipe(String items) {
+		Map<String, Object> resultMap = recipeService.getSearchRecipeInfo(items);
+		return new ModelAndView("home", "total", resultMap);
+	}
+
+	/**
+	 * 내가 등록한 레시피정보를 가지고 있는 리스트를 가져와 home 화면에 출력한다.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping("getMyRecipeInfo.do")
+	public ModelAndView getMyRecipeInfo(HttpSession session) {
+		MemberVO mvo = (MemberVO) session.getAttribute("mvo");
+		Map<String, Object> resultMap = recipeService.getMyRecipeInfo(mvo.getId());
+		return new ModelAndView("home", "total", resultMap);
+	}
+
 	/**
 	 * 레시피 상세 정보 보기
 	 * 
@@ -105,35 +106,39 @@ public class RecipeController {
 	 */
 	@RequestMapping("showRecipe.do")
 	@ResponseBody
-	public ModelAndView showContents(FileVO fvo,@CookieValue(value="memberCookie",required=false) String cookieValue,HttpServletResponse response, HttpSession session) {
+	public ModelAndView showContents(FileVO fvo,@CookieValue(value = "memberCookie", required = false) String cookieValue,
+			HttpServletResponse response, HttpSession session) {
 		RecipeVO rvo = null;
 		int recipeNo = recipeService.getRecipeNoByPath(fvo.getFilePath());
-		 if(cookieValue==null){//memberCookie cookie 존재하지 않으므로 cookie 생성하고 count 증가 (맨처음)
-	         response.addCookie(new Cookie("memberCookie","|"+recipeNo+"|"));
-	          rvo=recipeService.getRecipeInfo(recipeNo);
-	          System.out.println("cookieValue==null 일때 cookieValue : "+cookieValue);
-	      }else if(cookieValue.indexOf("|"+recipeNo+"|")==-1){//memberCookie cookie 존재하지만 {}번글은 처음 조회하므로 count증가
-	         cookieValue+="|"+recipeNo+"|";
-	         //글번호를 쿠키에 추가 
-	         response.addCookie(new Cookie("memberCookie",cookieValue));
-	          rvo=recipeService.getRecipeInfo(recipeNo);
-	          System.out.println("cookieValue.indexOf('|'+recipeNo+'|')==-1 cookieValue : "+cookieValue);
-	      }else{//memberCookie cookie 존재하고 이전에 해당 게시물 읽었으므로 count 증가x
-	          rvo=recipeService.getRecipeInfoNoHits(recipeNo);
-	          System.out.println("else 일떄 cookieValue : "+cookieValue);
-	      }   
-		Map<String, Object> resultMap = recipeService.getShowContentsInfo(recipeNo);
+		if (cookieValue == null) {// memberCookie cookie 존재하지 않으므로 cookie 생성하고
+									// count 증가 (맨처음)
+			response.addCookie(new Cookie("memberCookie", "|" + recipeNo + "|"));
+			rvo = recipeService.getRecipeInfo(recipeNo);
+			System.out.println("cookieValue==null 일때 cookieValue : "	+ cookieValue);
+		} else if (cookieValue.indexOf("|" + recipeNo + "|") == -1) {
+			// memberCookie
+			// cookie 존재하지만 {}번글은 처음 조회하므로 count증가
+			cookieValue += "|" + recipeNo + "|";
+			// 글번호를 쿠키에 추가
+			response.addCookie(new Cookie("memberCookie", cookieValue));
+			rvo = recipeService.getRecipeInfo(recipeNo);
+			System.out.println("cookieValue.indexOf('|'+recipeNo+'|')==-1 cookieValue : "+ cookieValue);
+		} else {// memberCookie cookie 존재하고 이전에 해당 게시물 읽었으므로 count 증가x
+			rvo = recipeService.getRecipeInfoNoHits(recipeNo);
+			System.out.println("else 일떄 cookieValue : " + cookieValue);
+		}
+		Map<String, Object> resultMap = recipeService	.getShowContentsInfo(recipeNo);
 		MemberVO mvo = (MemberVO) session.getAttribute("mvo");
-		if(mvo != null){
-			HashMap<String,Object> favoriteMap=new HashMap<String, Object>();
+		if (mvo != null) {
+			HashMap<String, Object> favoriteMap = new HashMap<String, Object>();
 			favoriteMap.put("memberId", mvo.getId());
 			favoriteMap.put("recipeNo", rvo.getRecipeNo());
 			int favoriteInfo = recipeService.getFavoriteRecipe(favoriteMap);
 			resultMap.put("favoriteInfo", favoriteInfo);
 		}
 		resultMap.put("rvo", rvo);
-		System.out.println("resultMap:"+resultMap);
-		ModelAndView model = new ModelAndView("jsonView",resultMap);
+		System.out.println("resultMap:" + resultMap);
+		ModelAndView model = new ModelAndView("jsonView", resultMap);
 		return model;
 	}
 
@@ -163,24 +168,22 @@ public class RecipeController {
 		int recipeNo = 0;
 		String contents = rvo.getContents();
 		List<String> list = convertHtmlimg(contents);
-		List<FileVO> fvoList=new ArrayList<FileVO>();
+		List<FileVO> fvoList = new ArrayList<FileVO>();
 		for (String imgUrl : list) {
 			FileVO fvo = new FileVO();
-			String imgName[]=imgUrl.split("/");
-			fvo.setFileName(imgName[imgName.length-1].toString());
+			String imgName[] = imgUrl.split("/");
+			fvo.setFileName(imgName[imgName.length - 1].toString());
 			fvo.setFilePath(imgUrl);
 			fvoList.add(fvo);
 		}
 		try {
-			recipeNo = recipeService.registerRecipe(rvo,items,fvoList);
+			recipeNo = recipeService.registerRecipe(rvo, items, fvoList);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return new ModelAndView("redirect:registerResult.do?recipeNo="
-				+ recipeNo);
+		return new ModelAndView("redirect:registerResult.do?recipeNo="+ recipeNo);
 	}
 
-		
 	/**
 	 * 레시피 등록 후 레시피 상세 페이지로 이동
 	 * 
@@ -210,10 +213,11 @@ public class RecipeController {
 	@Transactional
 	public ModelAndView deleteForm(RecipeVO rvo) {
 		String id = rvo.getMemberId();
-		int recipeNo=rvo.getRecipeNo();
-		recipeService.deleteRecipeAll(id,recipeNo);
+		int recipeNo = rvo.getRecipeNo();
+		recipeService.deleteRecipeAll(id, recipeNo);
 		return home();
 	}
+
 	/**
 	 * 
 	 * @param rvo
@@ -223,7 +227,7 @@ public class RecipeController {
 	@LoginCheck
 	@RequestMapping("updateForm.do")
 	public String updateForm(RecipeVO rvo, Model model) {
-		Map<String ,Object> map =recipeService.getUpdateFormInfo(rvo.getRecipeNo());
+		Map<String, Object> map = recipeService.getUpdateFormInfo(rvo.getRecipeNo());
 		model.addAttribute("updateInfo", map);
 		return "update_recipe";
 	}
@@ -235,8 +239,7 @@ public class RecipeController {
 	 * @param response
 	 */
 	@LoginCheck
-	@RequestMapping(value = "multiplePhotoUpload.do", method = {
-			RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "multiplePhotoUpload.do", method = {	RequestMethod.GET, RequestMethod.POST })
 	public void multiplePhotoUpload(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) {
 		MemberVO mvo = (MemberVO) session.getAttribute("mvo");
@@ -267,8 +270,7 @@ public class RecipeController {
 			InputStream is = request.getInputStream();
 			OutputStream os = new FileOutputStream(filePath);
 			int numRead;
-			byte b[] = new byte[Integer
-					.parseInt(request.getHeader("file-size"))];
+			byte b[] = new byte[Integer.parseInt(request.getHeader("file-size"))];
 			while ((numRead = is.read(b, 0, b.length)) != -1) {
 				os.write(b, 0, numRead);
 			}
@@ -285,7 +287,7 @@ public class RecipeController {
 			 */
 			sFileInfo += "&bNewLine=true";
 			sFileInfo += "&sFileName=" + oriName;
-			sFileInfo += "&sFileURL=" + "/fridge_v0.1/photo_upload/" + mvo.getId()+ "/" + fileName;
+			sFileInfo += "&sFileURL=" + "/fridge_v0.1/photo_upload/"+ mvo.getId() + "/" + fileName;
 			PrintWriter print = response.getWriter();
 			print.print(sFileInfo);
 			print.flush();
@@ -302,9 +304,7 @@ public class RecipeController {
 	 * @return
 	 */
 	public static List<String> convertHtmlimg(String img) {
-		Pattern nonValidPattern = Pattern
-				.compile("<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>");
-
+		Pattern nonValidPattern = Pattern.compile("<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>");
 		List<String> result = new ArrayList<String>();
 		Matcher matcher = nonValidPattern.matcher(img);
 		while (matcher.find()) {
@@ -312,154 +312,177 @@ public class RecipeController {
 		}
 		return result;
 	}
-	   /**
-	    * 업데이트
-	    * @param request
-	    * @param rvo
-	    * @return
-	    */
-		@LoginCheck
-	   @RequestMapping("updateRecipe.do")
-	   @Transactional
-	   public ModelAndView updateRecipe(RecipeVO rvo,String items){
-	       List<String> list = convertHtmlimg(rvo.getContents());
-	       recipeService.updateRecipe(rvo);  
-	       List<FileVO> fvoList=new ArrayList<FileVO>();
-			for (String imgUrl : list) {
-				FileVO fvo = new FileVO();
-				String imgName[]=imgUrl.split("/");
-				fvo.setFileName(imgName[imgName.length-1].toString());
-				fvo.setFilePath(imgUrl);
-				fvoList.add(fvo);
-			}
-			recipeService.insertRecipeItem(rvo,items);
-			recipeService.insertRecipeFile(rvo, fvoList);  
-	      return home();
-	   }
-	   
-		@RequestMapping("{viewId}.do")
-		public String showView(@PathVariable String viewId){
-			return viewId;
+
+	/**
+	 * 업데이트
+	 * 
+	 * @param request
+	 * @param rvo
+	 * @return
+	 */
+	@LoginCheck
+	@RequestMapping("updateRecipe.do")
+	@Transactional
+	public ModelAndView updateRecipe(RecipeVO rvo, String items) {
+		List<String> list = convertHtmlimg(rvo.getContents());
+		recipeService.updateRecipe(rvo);
+		List<FileVO> fvoList = new ArrayList<FileVO>();
+		for (String imgUrl : list) {
+			FileVO fvo = new FileVO();
+			String imgName[] = imgUrl.split("/");
+			fvo.setFileName(imgName[imgName.length - 1].toString());
+			fvo.setFilePath(imgUrl);
+			fvoList.add(fvo);
 		}
-		/**
-		 * 추천 버튼 클릭 시 추천 insert 및 update
-		 * @param mvo
-		 * @param rvo
-		 * @param goodCase
-		 * @return
-		 */
-		@LoginCheck
-		@RequestMapping("updateGood.do")
-		@ResponseBody
-		public void updateGood(MemberVO mvo,RecipeVO rvo,String goodCase){
-			String memberId=mvo.getId();
-			int recipeNo=rvo.getRecipeNo();
-			recipeService.updateGood(memberId,recipeNo,goodCase);
+		recipeService.insertRecipeItem(rvo, items);
+		recipeService.insertRecipeFile(rvo, fvoList);
+		return home();
+	}
+
+	@RequestMapping("{viewId}.do")
+	public String showView(@PathVariable String viewId) {
+		return viewId;
+	}
+
+	/**
+	 * 추천 버튼 클릭 시 추천 insert 및 update
+	 * 
+	 * @param mvo
+	 * @param rvo
+	 * @param goodCase
+	 * @return
+	 */
+	@LoginCheck
+	@RequestMapping("updateGood.do")
+	@ResponseBody
+	public void updateGood(MemberVO mvo, RecipeVO rvo, String goodCase) {
+		String memberId = mvo.getId();
+		int recipeNo = rvo.getRecipeNo();
+		recipeService.updateGood(memberId, recipeNo, goodCase);
+	}
+
+	/**
+	 * 비추천 버튼 클릭 시 비추천 insert 및 update
+	 * 
+	 * @param mvo
+	 * @param rvo
+	 * @param badCase
+	 * @return
+	 */
+	@LoginCheck
+	@RequestMapping("updateBad.do")
+	@ResponseBody
+	public void updateBad(MemberVO mvo, RecipeVO rvo, String badCase) {
+		String memberId = mvo.getId();
+		int recipeNo = rvo.getRecipeNo();
+		recipeService.updateBad(memberId, recipeNo, badCase);
+	}
+
+	/**
+	 * 추천 비추천 테이블 유무 체크 및 good bad 값 호출
+	 * 
+	 * @param mvo
+	 * @param rvo
+	 * @return
+	 */
+	@RequestMapping("checkGoodAndBad.do")
+	@ResponseBody
+	public ModelAndView checkGoodAndBad(MemberVO mvo, RecipeVO rvo) {
+		String memberId = mvo.getId();
+		int recipeNo = rvo.getRecipeNo();
+		HashMap<String, Object> goodAndBadResult = recipeService.checkGoodAndBad(memberId, recipeNo);
+		return new ModelAndView("jsonView", goodAndBadResult);
+	}
+
+	/**
+	 * 레시피 즐겨찾기 등록
+	 */
+	@LoginCheck
+	@RequestMapping(value = "registerFavorite.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Object registerFavorite(FavoriteVO fvo, HttpSession session) {
+		MemberVO mvo = (MemberVO) session.getAttribute("mvo");
+		if (mvo == null) {
+			return "home";
 		}
-		/**
-		 * 비추천 버튼 클릭 시 비추천 insert 및 update 
-		 * @param mvo
-		 * @param rvo
-		 * @param badCase
-		 * @return
-		 */
-		@LoginCheck
-		@RequestMapping("updateBad.do")
-		@ResponseBody
-		public void updateBad(MemberVO mvo,RecipeVO rvo,String badCase){
-			String memberId=mvo.getId();
-			int recipeNo=rvo.getRecipeNo();
-			recipeService.updateBad(memberId,recipeNo,badCase);
+		fvo.setMemberId(mvo.getId());
+		String str = recipeService.registerFavorite(fvo);
+		return str;
+	}
+
+	/**
+	 * 즐겨찾기 리스트 검색
+	 * 
+	 * @param session
+	 * @return
+	 */
+	@LoginCheck
+	@RequestMapping("favoriteRecipeList.do")
+	public String getFavoriteRecipeList(HttpSession session, Model model,
+			String pageNo) {
+		MemberVO mvo = (MemberVO) session.getAttribute("mvo");
+		if (mvo == null) {
+			return "home";
+		} else {
+			FavoriteListVO lvo = recipeService.getFavoriteRecipeList(pageNo,	mvo.getId());
+			model.addAttribute("lvo", lvo);
 		}
-		/**
-		 * 추천 비추천 테이블 유무 체크 및
-		 * good bad 값 호출
-		 * @param mvo
-		 * @param rvo
-		 * @return
-		 */
-		@RequestMapping("checkGoodAndBad.do")
-		@ResponseBody
-		public ModelAndView checkGoodAndBad(MemberVO mvo,RecipeVO rvo){
-			String memberId=mvo.getId();
-			int recipeNo=rvo.getRecipeNo();
-			HashMap<String,Object> goodAndBadResult=recipeService.checkGoodAndBad(memberId,recipeNo);
-			return new ModelAndView("jsonView",goodAndBadResult);
-		}
-		
-		/**
-		    * 레시피 즐겨찾기 등록
-		    */
-		@LoginCheck
-		@RequestMapping(value="registerFavorite.do", method=RequestMethod.POST )
-		@ResponseBody
-		public Object registerFavorite(FavoriteVO fvo, HttpSession session){
-			MemberVO mvo = (MemberVO) session.getAttribute("mvo");
-			if(mvo == null){
-				return "home";
-			}
-			fvo.setMemberId(mvo.getId());
-			String str = recipeService.registerFavorite(fvo);
-			return str;
-		}
-		   /**
-		    * 즐겨찾기 리스트 검색
-		    * @param session
-		    * @return
-		    */
-			@LoginCheck
-		   @RequestMapping("favoriteRecipeList.do")
-		   public String getFavoriteRecipeList(HttpSession session, Model model, String pageNo){
-		      MemberVO mvo = (MemberVO) session.getAttribute("mvo");
-		      if(mvo == null){
-		         return "home";
-		      }else{
-		         FavoriteListVO lvo = recipeService.getFavoriteRecipeList(pageNo, mvo.getId());
-		         model.addAttribute("lvo", lvo); 
-		      }
-		      return "favoriteList_recipe";
-		   }
-		   
-		   /**
-		    * 즐겨찾기 삭제
-		    * @param fvo
-		    * @return
-		    */
-			@LoginCheck
-		   @RequestMapping(value="deleteFavorite.do", method=RequestMethod.POST)
-		   @ResponseBody
-		   public Object deleteFavorite(FavoriteVO fvo, String pageNo){
-		      recipeService.deleteFavorite(fvo);
-		      return recipeService.getFavoriteRecipeList(pageNo, fvo.getMemberId());
-		   }
-		   
-		   /**
-		    * 메인 view 즐겨찾기 클릭시
-		    * @param model
-		    * @param pageNo
-		    * @param session
-		    * @return
-		    */
-			@LoginCheck
-		   @RequestMapping("favoriteView.do")
-		   public String favoriteView(Model model, String pageNo, HttpSession session){
-		      MemberVO mvo = (MemberVO) session.getAttribute("mvo");
-		      List<HashMap<String,Object>> fileLastNamePath=recipeService.getFavoriteInfo(mvo);
-		      model.addAttribute("fileLastNamePath",fileLastNamePath);
-		      /*model.addAttribute("recipeNoList", recipeNoList.size());*/
-		      return "favoriteView_recipe";
-		   }
-		   
-		   /**
-		       *  댓글 팝업창 띄우기
-		       * @param rvo
-		       * @param items
-		       * @return
-		       */
-			@LoginCheck
-		      @RequestMapping("recipeCommentForm.do")
-		      public String recipeCommentForm(){        
-		         return"posting/commentRecipeForm";
-		      }
-		   
+		return "favoriteList_recipe";
+	}
+
+	/**
+	 * 즐겨찾기 삭제
+	 * 
+	 * @param fvo
+	 * @return
+	 */
+	@LoginCheck
+	@RequestMapping(value = "deleteFavorite.do", method = RequestMethod.POST)
+	@ResponseBody
+	public Object deleteFavorite(FavoriteVO fvo, String pageNo) {
+		recipeService.deleteFavorite(fvo);
+		return recipeService.getFavoriteRecipeList(pageNo, fvo.getMemberId());
+	}
+
+	/**
+	 * 메인 view 즐겨찾기 클릭시
+	 * 
+	 * @param model
+	 * @param pageNo
+	 * @param session
+	 * @return
+	 */
+	@LoginCheck
+	@RequestMapping("favoriteView.do")
+	public String favoriteView(Model model, String pageNo, HttpSession session) {
+		MemberVO mvo = (MemberVO) session.getAttribute("mvo");
+		List<HashMap<String, Object>> fileLastNamePath = recipeService
+				.getFavoriteInfo(mvo);
+		model.addAttribute("fileLastNamePath", fileLastNamePath);
+		/* model.addAttribute("recipeNoList", recipeNoList.size()); */
+		return "favoriteView_recipe";
+	}
+
+	/**
+	 * 댓글 팝업창 띄우기
+	 * 
+	 * @param rvo
+	 * @param items
+	 * @return
+	 */
+	@LoginCheck
+	@RequestMapping("recipeCommentForm.do")
+	public String recipeCommentForm() {
+		return "posting/commentRecipeForm";
+	}
+	
+	@RequestMapping("autocomplete.do")
+	@ResponseBody
+	public List<String> autocomplete(HttpServletRequest request){
+		String value = request.getParameter("value");
+		List<String> list = recipeService.getItamListByPart(value);
+		System.out.println(list);
+		return list;
+	}
+
 }

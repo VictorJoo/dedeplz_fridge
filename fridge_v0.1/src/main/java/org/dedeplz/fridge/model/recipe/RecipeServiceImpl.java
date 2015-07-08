@@ -543,6 +543,56 @@ public class RecipeServiceImpl implements RecipeService{
 	public void deleteAllRecipeCommentByCommnetNo(int commentNo) {
 		recipeDAO.deleteRecipeCommentByCommentNo(commentNo);
 	}
+	/**
+	 * 아이디 이용
+	 * 해당 gnb no리스트 받아온다
+	 */
+	@Override
+	public List<Integer> getMyGoodAndBadN0List(String id) {
+		return recipeDAO.getMyGoodAndBadN0List(id);
+	}
+	/**
+	 * 아이디 이용
+	 * 해당 추천 번호 리스트를 받아온다
+	 */
+	@Override
+	public List<Integer> getMyFavoriteNoList(String id) {
+		return recipeDAO.getMyFavoriteNoList(id);
+	}
+	/**
+	 * 아이디이용
+	 * 등록한 추천 비추천 삭제
+	 */
+	@Override
+	public void deleteGoobAndBadAll(int gnbNo) {
+	  recipeDAO.deleteGoobAndBadAll(gnbNo);
+	};
+	/**
+	 * 등록한 즐겨찾기 삭제
+	 */
+	@Override
+	public void deletefavoriteAll(int favoriteNo) {
+		recipeDAO.deletefavoriteAll(favoriteNo);
+	}
+
+	@Override
+	public void updateRecipeNickName(MemberVO vo) {
+		List<String> recipeNoList=recipeDAO.getMyRecipeList(vo.getId());
+		Map<String,Object> map=new HashMap<String, Object>();
+		map.put("nick",vo.getNick());
+		if(recipeNoList!=null){
+			for(int i=0;i<recipeNoList.size();i++){
+				map.put("recipeNo", Integer.parseInt(recipeNoList.get(i)));
+				recipeDAO.updateRecipeNickName(map);
+			}
+		}
+		
+	}
+
+	@Override
+	public List<String> getItamListByPart(String value) {		
+		return recipeDAO.getItamListByPart(value);	
+	};
 	
 	
 }

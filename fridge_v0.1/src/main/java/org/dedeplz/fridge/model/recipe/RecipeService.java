@@ -42,5 +42,10 @@ public interface RecipeService {
 	public Map<String, Object> getMyRecipeInfo(String id);
 	public void deleteAllRecipeCommentByCommnetNo(int commentNo);
 	public List<Integer> getMyCommentNoListByNick(String nick);
-	
+	public List<Integer> getMyGoodAndBadN0List(String id);
+	public List<Integer> getMyFavoriteNoList(String id);
+	public void deleteGoobAndBadAll(int gnbNo);
+	public void deletefavoriteAll(int favoriteNo);
+	public void updateRecipeNickName(MemberVO vo);
+	public List<String> getItamListByPart(String value);
 }

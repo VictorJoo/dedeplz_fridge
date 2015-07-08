@@ -34,11 +34,12 @@ img#badImg {
     <!-- Custom CSS -->
     <link rel="stylesheet" href="css/creative.css" type="text/css">
     <link href="css/agency.css" rel="stylesheet">
+	
+	 <!-- jQeryUI -->
+	<link href="jsui/jquery-ui.css" rel="stylesheet" type="text/css"> 
 
 
-<title>Tiles Layout</title>
-
-  
+<title>Tiles Layout</title> 
 
 
 
@@ -111,9 +112,12 @@ img#badImg {
    </section>
    <%-- <div id="footer"><tiles:insertAttribute name="footer" /></div> --%>
 </div>
- <!-- jQuery -->
+	 <!-- jQuery -->
     <script src="js/jquery.js"></script>
+	<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+	<script src="jsui/jquery-ui.js"></script>
 
+	
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 
@@ -125,6 +129,7 @@ img#badImg {
     <!-- Custom Theme JavaScript -->    
     <script src="js/creative.js"></script>
    
+
 
    <script type="text/javascript">
    var idchecked=false;
@@ -701,6 +706,7 @@ img#badImg {
                 //자유게시판 댓글 수정폼 load
                 $(document).on("click", ":input[name=updateBoardCommentBtn]",function(e){
                    var commentNo=$(this).val();
+                   if(confirm("수정하시겠습니까?")){
                   $.ajax({
                        type:"POST",
                        url:"showBoardComment.do",
@@ -722,7 +728,8 @@ img#badImg {
                          table+="<td colspan='2'><textarea rows='2' style='width: 100%;' id='editComment'>"
                          +data[i].commentContents+"</textarea>";
                          
-                         table+="<td><input type='button' a class='btn btn-primary' value='수정' name='editCommentBtn'></td></tr></tbody>";
+                         table+="<td><input type='button' a class='btn btn-primary' value='수정' name='editCommentBtn'>"+
+                         " <input type='button' a class='btn btn-danger' value='취소' name='cancelCommentBtn'></td></tr></tbody>"; 
                          
                       }else{
                          table+="<td id='"+data[i].commentNo+"CommentContents'><font size='2'>"+data[i].commentContents+"</font></td>";
@@ -734,6 +741,7 @@ img#badImg {
                    $("#commentList").html(table);                  
                        }//callback
                });//ajax
+                   }
                 });
                 
               //자유게시판 댓글 삭제
@@ -773,11 +781,88 @@ img#badImg {
                       return false;
                    }      
                 });
+                //수정시 취소버튼 
+                $(document).on("click", ":input[name=cancelCommentBtn]",function(e){
+                  //location.reload();
+                      $.ajax({
+                            type:"POST",
+                            url:"showBoardComment.do",
+                            data:"commentNo="+$("#commentNo").val()+"&commentBoardNo="+$("#commentBoardNo").val()+"&commentContents="+$("#editComment").val(),   
+                            success:function(data){
+                               var table="<div class='col-md-10' style='padding:0px; height:auto; width:600px; margin-left: 50px'>";
+                                table+="<table class='table' cellpadding='10'  style='table-layout:fixed'>"; 
+                               for(var i=0;i<data.length;i++){
+                                  table+="<input type='hidden' id='commentBoardNo' name='commentBoardNo' value="+data[i].commentBoardNo+">";
+                                   table+="<thead><tr><th><b>작성자"+ data[i].commentNick+"</b></th>";
+                                  table+="<th></th>";
+                                  table+="<th><b>"+data[i].commentTime+"</b></th></tr></thead>";
+                                  table+="<tbody><tr>";
+                                  table+="<td id='"+data[i].commentNo+"CommentContents' colspan='2'><font size='2'>"+data[i].commentContents+"</font></td>";
+                                  if("${sessionScope.mvo.nick}"==data[i].commentNick){
+                                        table+="<td><button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='updateBoardCommentBtn' name='updateBoardCommentBtn'>수정</button>"; 
+                                      table+=" <button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='deleteBoardCommentBtn' name='deleteBoardCommentBtn'>삭제</button></td></tr></tbody>";
+                                  }else if("${sessionScope.mvo.level}"=='6'){
+                                      table+="<td><button type='button' a class='btn btn-primary' value='"+data[i].commentNo+"' id='deleteBoardCommentBtn' name='deleteBoardCommentBtn'>삭제</button></td></tr></tbody>";
+                                  }            
+                               }
+                               table+="</table>";
+                               table+="</div>";
+                               $("#commentList").html(table); 
+                               $("#boardComment").val("");  
+                            }//callback
+                       });//ajax
+                }); //cancleCommentBtn
+                
+           //자동완성         
+		     $("#autocomplete").autocomplete({
+		    	source : function( request, response ) {
+		    		/* var itemValue= $("#autocomplete").value;
+		    		alert(itemValue);
+		    		var len = 0;
+		            for (var i = 0; i < itemValue.length; i++) {
+		                if (escape(itemValue.charAt(i)).length == 6) {
+		                    len++;
+		                }
+		                len++;
+		            }
+		           
+		    		alert(len ); */
+		    		/* if($(this).value.length >=2){
+			    		var strArray=$(this).value.split('#');
+			    		alert(strArray[0]);
+		    			
+		    		} */
+		         $.ajax({
+		                type: 'post',
+		                url: "autocomplete.do",
+		                dataType: "json",
+		                //request.term = $("#autocomplete").val()
+		                data: { value : request.term },
+		                success: function(data) {
+		                    //서버에서 json 데이터 response 후 목록에 뿌려주기 위함
+		                    response( 
+		                        $.map(data, function(item) {
+		                            return {		                            	
+		                                label: "#"+item,
+		                                value: "#"+item+"#"
+		                            };
+		                        })
+		                    );
+		                }
+		           });
+		        },
+		    //조회를 위한 최소글자수
+		    minLength: 1,
+		    select: function( event, ui ) {
+		        // 만약 검색리스트에서 선택하였을때 선택한 데이터에 의한 이벤트발생
+		    }
+		});
+
    });//ready
    //댓글 팝업
    $(document).on("click","#commentPopUp",function(){
       window.open("getCommentRecipeList.do?commentRecipeNo="+$("#gnbUseRecipeNo").val(), "popup",
-     "width=600,height=500,top=60,left=450");
+     "width=408,height=560,top=60,left=450");
         return false;
         });//댓글 팝업_submit
         

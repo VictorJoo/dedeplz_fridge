@@ -18,7 +18,9 @@
 <script type="text/javascript" >
 
 $(document).ready(function(){   
-
+   
+   
+   
       var commentNoList=new Array();
          <c:forEach items="${requestScope.clvo }" var="commentInfo">
             commentNoList.push("${commentInfo.commentNo}");
@@ -30,14 +32,14 @@ $(document).ready(function(){
            $("#registerCommentForm").hide();
            var commentNum=$(this).val();
            for(var i=0;i<commentNoList.length;i++){
-               $("#update"+commentNoList[i]).html($("#contents"+commentNoList[i]).val());
+               $("#update"+commentNoList[i]).html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;   "+$("#contents"+commentNoList[i]).val());
                $("#recommentUpdateBtn"+commentNoList[i]).show();
             }
           $("#recommentUpdateBtn"+commentNum).hide();          
            var insertRecommentForm="<form action='${initParam.root}registerRecomment.do' method='post' id='registerRecommentForm'>";
-           insertRecommentForm+= "<strong>@"+$("#commentNick"+commentNum).val()+"</strong> &nbsp; &nbsp; ";
-           insertRecommentForm+="<input type='text' name='commentContents' id='recommentContents'> <button type='button' class='btn btn-link btn-xs'  id='registerRecomment'>등록</button>";
-           insertRecommentForm+="<button type='button' class='btn btn-link btn-xs' id='cancelRecomment'>취소</button>";
+           insertRecommentForm+= "<strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@"+$("#commentNick"+commentNum).val()+"</strong> &nbsp; &nbsp; ";
+           insertRecommentForm+="<input type='text' name='commentContents' id='recommentContents'>&nbsp;&nbsp; <button type='button' class='btn btn-default btn-xs'  id='registerRecomment'>등록</button>";
+           insertRecommentForm+="&nbsp;<button type='button' class='btn btn-default btn-xs' id='cancelRecomment'>취소</button>";
            insertRecommentForm+="<input type='hidden' value='"+$("#commentNo"+commentNum).val()+"' name='commentRef'>";
            insertRecommentForm+="<input type='hidden' value='"+$("#commentNick"+commentNum).val()+"' name='commentRefNick'>";
            insertRecommentForm+="<input type='hidden' value='"+$("#commentNo"+commentNum).val()+"' name='commentNo'>";
@@ -60,7 +62,7 @@ $(document).ready(function(){
                $("#registerCommentForm").show();
                 if($("#recommentContents").val()==""){
                    for(var i=0;i<commentNoList.length;i++){
-                        $("#update"+commentNoList[i]).html($("#contents"+commentNoList[i]).val());
+                        $("#update"+commentNoList[i]).html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;   "+$("#contents"+commentNoList[i]).val());
                         $(".recommentForm").html("");
                         $("#recommentUpdateBtn"+commentNoList[i]).show();
                      }
@@ -86,16 +88,16 @@ $(document).ready(function(){
              //alert(commentNum);
              
            for(var i=0;i<commentNoList.length;i++){
-                $("#update"+commentNoList[i]).html($("#contents"+commentNoList[i]).val());
+                $("#update"+commentNoList[i]).html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;   "+$("#contents"+commentNoList[i]).val());
                 $("#recommentUpdateBtn"+commentNoList[i]).show();
              }
             $(".recommentForm").html("");
            $("#recommentUpdateBtn"+commentNum).hide();
           // alert(commentNum);
            var updateRecommentForm="<form action='${initParam.root}updateRecomment.do' method='post' id='updateRecommentForm'>";
-           updateRecommentForm+="<input type='text' name='commentContents' id='updateRecommentContents'  value='"+$("#commentContents"+commentNum).val()+"'>";
-           updateRecommentForm+="    <button type='button' class='btn btn-link btn-xs' id='updateRecomment'>수정</button>";
-           updateRecommentForm+="<button type='button' class='btn btn-link btn-xs' id='cancelUpdateRecomment'>취소</button>";
+           updateRecommentForm+="&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  <input type='text' name='commentContents' id='updateRecommentContents'  value='"+$("#commentContents"+commentNum).val()+"'>";
+           updateRecommentForm+="    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-default btn-xs' id='updateRecomment'>수정</button>";
+           updateRecommentForm+="&nbsp;<button type='button' class='btn btn-default btn-xs' id='cancelUpdateRecomment'>취소</button>";
            updateRecommentForm+="<input type='hidden' value='"+$("#commentNo"+commentNum).val()+"' name='commentNo'>";
            updateRecommentForm+="<input type='hidden' value='${requestScope.recipeNo}' name='commentRecipeNo'>";
            updateRecommentForm+= "</form>";           
@@ -113,7 +115,7 @@ $(document).ready(function(){
            $(document).on("click","#cancelUpdateRecomment",function(){
               $("#registerCommentForm").show();
                for(var i=0;i<commentNoList.length;i++){
-                    $("#update"+commentNoList[i]).html($("#contents"+commentNoList[i]).val());
+                    $("#update"+commentNoList[i]).html("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;   "+$("#contents"+commentNoList[i]).val());
                     $("#recommentUpdateBtn"+commentNoList[i]).show();
                  }
            });
@@ -125,32 +127,33 @@ $(document).ready(function(){
    <body>
      <div class="alert alert-dismissable alert-default" contenteditable="true">
               <strong>${requestScope.recipeNo}번 레시피 댓글</strong></div>
-          </div>
+             
    
    
     <table >
     <c:forEach items="${requestScope.clvo }" var="commentList" varStatus="status">
          <tr>
              <td>
-                       <c:if test="${commentList.commentLevel==0}" ><hr></c:if>                     
-               <strong>${commentList.commentNick}</strong>        ${commentList.commentTime}
-             <button type="button" class="btn btn-link btn-xs" name="recommentInsertBtn" value="${commentList.commentNo}">답글</button>
+                   
+                       <c:if test="${commentList.commentLevel==0}" ><hr style="border: double 1px  #e2e2e2;"></c:if>                     
+               <strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; ${commentList.commentNick}</strong>  &nbsp; &nbsp;     ${commentList.commentTime}&nbsp;&nbsp;
+             <button type="button" class="btn btn-default btn-xs" name="recommentInsertBtn" value="${commentList.commentNo}">답글</button>
              <%--   <button type="button"  name="recommentInsertBtn" value="${commentList.commentNo}">답글</button>  --%>
            <%--   <a href="#" onclick="recommentInsertBtn()" class="${commentList.commentNo}"><i class="fa fa-fw fa-level-up fa-lg fa-rotate-90 text-primary"></i></a> --%>  
                    <%--     <button type="button"  name="recommentInsertBtn" value="${commentList.commentNo}">답글</button>      --%>       
                           <c:if test="${sessionScope.mvo.nick == commentList.commentNick}" >
                            
-                           <button type="button" class="btn btn-link btn-xs" name="recommentDeleteBtn" value="${commentList.commentNo}">삭제</button>
+                           <button type="button" class="btn btn-default btn-xs" name="recommentDeleteBtn" value="${commentList.commentNo}">삭제</button>
                               <%--  <button type="button"  name="recommentDeleteBtn" value="${commentList.commentNo}">삭제</button> --%>
-                               <button type="button" class="btn btn-link btn-xs"  id="recommentUpdateBtn${commentList.commentNo}" name="recommentUpdateBtn"  value="${commentList.commentNo}">수정</button>
+                               <button type="button" class="btn btn-default btn-xs"  id="recommentUpdateBtn${commentList.commentNo}" name="recommentUpdateBtn"  value="${commentList.commentNo}">수정</button>
                                <%-- <button type="button"  id="recommentUpdateBtn${commentList.commentNo}" name="recommentUpdateBtn"  value="${commentList.commentNo}">수정</button> --%>
                                <input type="hidden" value="${commentList.commentContents}" id="commentContents${commentList.commentNo}">  
                           </c:if>
                      
                       <br>   <c:if test="${commentList.commentLevel==1}" >      
-                         <p class="text-danger">  @ ${commentList.commentRefNick}</p>  
+                         <p class="text-danger">  &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;@ ${commentList.commentRefNick}</p>  
                       </c:if>
-                       <div id="update${commentList.commentNo}" class="updateRecommentForm">  ${commentList.commentContents}</div>
+                       <div id="update${commentList.commentNo}" class="updateRecommentForm">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;   ${commentList.commentContents}</div>
                        <input type="hidden" value="${commentList.commentContents}" id="contents${commentList.commentNo}" >
                                    
                       <div id="${commentList.commentNo}" class="recommentForm"></div>
@@ -164,9 +167,9 @@ $(document).ready(function(){
       </table>
       <br><br>
       <div class="col-sm-2">
-      <div class="alert alert-dismissable alert-info" contenteditable="true">
+      <div class="alert  alert-info" contenteditable="true">
       <form action="registerComment.do" method="post" id="registerCommentForm">
-     <a href="#" ><i class="fa fa-3x fa-fw fa-user"  style="margin-bottom: 55px" ></i></a>&nbsp;&nbsp;&nbsp;<textarea rows="2.8" cols="20" name="commentContents" id="recipeCommentContents" ></textarea>
+     <a href="#" ><i class="fa fa-3x fa-fw fa-user"  ></i></a>&nbsp;&nbsp;&nbsp;<textarea rows="2.8" cols="20" name="commentContents" id="recipeCommentContents" ></textarea>
        &nbsp; <button type="submit" class="btn btn-info btn-lg"  id="registerCommentBtn" style="margin-bottom: 38px">등록</button>
    <input type="hidden" value="${requestScope.recipeNo }" name="commentRecipeNo">
    </form>

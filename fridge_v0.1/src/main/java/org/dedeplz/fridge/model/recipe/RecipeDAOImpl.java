@@ -422,4 +422,46 @@ public class RecipeDAOImpl implements RecipeDAO {
 		public List<Integer> getMyCommentNoListByNick(String nick) {
 			return sqlSessionTemplate.selectList("recipeComment.getMyCommentNoListById", nick);
 		}
+		/**
+		 * 아이디이용
+		 * 해당 gnb no 리스트 받아온다
+		 */
+		@Override
+		public List<Integer> getMyGoodAndBadN0List(String id) {
+			return sqlSessionTemplate.selectList("recipe.getMyGoodAndBadN0List",id);
+		}
+		/**
+		 * 아이디이용
+		 * 해당 favorite no 리스트 받아온다
+		 */
+		@Override
+		public List<Integer> getMyFavoriteNoList(String id) {
+			return sqlSessionTemplate.selectList("recipe.getMyFavoriteNoList",id);
+		}
+
+		@Override
+		public void deleteGoobAndBadAll(int gnbNo) {
+			sqlSessionTemplate.delete("recipe.deleteGoobAndBadAll",gnbNo);
+			
+		}
+
+		@Override
+		public void deletefavoriteAll(int favoriteNo) {
+			sqlSessionTemplate.delete("recipe.deletefavoriteAll",favoriteNo);
+			
+		}
+
+		@Override
+		public void updateRecipeNickName(Map<String, Object> map) {
+			sqlSessionTemplate.update("recipe.updateRecipeNickName",map);
+		}
+
+		/**
+		 *  자동 완성 기능을 위해 value 값으로 부분값을 입력받아 해당하는 재료 목록을 리턴
+		 */
+		@Override
+		public List<String> getItamListByPart(String value) {		
+			System.out.println("값 : "+ value);
+			return sqlSessionTemplate.selectList("recipe.getItamListByPart",value);
+		}
 }

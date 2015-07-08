@@ -119,3 +119,5 @@ drop sequence recipe_comment_seq;
 select * from recipe_comment;
 
 select recipe_no from recipe where member_id='java';
+
+select item_name from item where item_name like '오%';
