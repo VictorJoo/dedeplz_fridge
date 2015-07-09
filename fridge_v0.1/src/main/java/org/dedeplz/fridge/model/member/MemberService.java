@@ -12,8 +12,6 @@ public interface MemberService {
 
    public void updateMember(MemberVO vo);
 
-   //public void deleteMember(MemberVO vo);
-
    public String nickCheck(String nick);
 
    public String findMyPassword(MemberVO vo);
@@ -30,6 +28,6 @@ public interface MemberService {
 
      public void updateMemberLove(MemberVO mvo);
 
-     public void deleteAllMemberInfo(MemberVO mvo);
+	public void deleteAllMemberInfoByIdAndNick(MemberVO mvo);
 
 }

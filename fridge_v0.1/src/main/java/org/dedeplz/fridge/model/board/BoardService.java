@@ -10,7 +10,6 @@ public interface BoardService {
 
 	public int registerBoard(BoardVO rvo, String items, List<FileVO> fvoList);
 
-	
 	public BoardVO getBoardInfo(int boardNo);
 
 	public void insertBoardFile(BoardVO bvo, List<FileVO> fvoList);
@@ -35,7 +34,7 @@ public interface BoardService {
 
 	public List<FileVO> getFvoList(String contents);
 
-	public List<Integer> getMyBoardList(String id);
+	public List<Integer> getMyBoardNoListById(String id);
 	
 
 	

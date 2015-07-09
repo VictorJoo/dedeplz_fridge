@@ -291,7 +291,9 @@ public class RecipeDAOImpl implements RecipeDAO {
 		sqlSessionTemplate.insert("recipe.registerFavorite", fvo);
 
 	}
-
+	/**
+	 * 아이디와 페이지 No를 이용 즐겨찾기 정보를 리스트로 받아온다
+	 */
 	@Override
 	public List<FavoriteVO> getFavoriteRecipeList(Map<String, Object> map) {
 		System.out.println(map);
@@ -347,10 +349,10 @@ public class RecipeDAOImpl implements RecipeDAO {
 	public List<String> getMyRecipeList(String id) {
 		return sqlSessionTemplate.selectList("recipe.getMyRecipeList", id);
 	}
-
 	/**
-	    * 
-	    */
+	 * 회원 아이디와 레시피 번호로 
+	 * 즐겨찾기 존재 유무 확인
+	 */
 	@Override
 	public int getFavoriteRecipe(HashMap<String, Object> map) {
 		return sqlSessionTemplate.selectOne("recipe.getFavoriteRecipe", map);
@@ -374,15 +376,6 @@ public class RecipeDAOImpl implements RecipeDAO {
 	}
 	
 	/**
-	 * 레시피 번호를 통해 
-	 * 해당 레시피의 총 댓글수를 가져와 리턴한다.
-	 */
-	@Override
-	public int getCountOfCommentByRecipeNo(int recipeNo){
-		return sqlSessionTemplate.selectOne("recipeComment.getCountOfCommentByRecipeNo",recipeNo);
-	}
-	
-	/**
 	    * 회원 아이디에 해당하는 즐겨찾기 목록(레시피 번호)을 갖고 온다.
 	    */
 	   @Override
@@ -396,61 +389,11 @@ public class RecipeDAOImpl implements RecipeDAO {
 		public int totalFavoriteContent(String id) {
 			return sqlSessionTemplate.selectOne("recipe.totalFavoriteContent", id);
 		}
+		
 		/**
-		 * 레시피 번호를 이용
-		 * 해당 레시피에 존재하는 댓글의 모든 번호를
-		 * 받아온다
+		 * 회원 정보 수정 시 닉네임이 변경되는 경우
+		 * 레시피 정보의 닉네임이 변경 되도록 한다
 		 */
-		@Override
-		public List<Integer> getCommentNoListByRecipeNo(int recipeNo) {
-			return sqlSessionTemplate.selectList("recipeComment.getCommentNoListByRecipeNo",recipeNo);
-		}
-		/**
-		 * commentNo를 이용
-		 * 해당 댓글을 삭제
-		 */
-		@Override
-		public void deleteRecipeCommentByCommentNo(int commentNo) {
-			sqlSessionTemplate.delete("recipeComment.deleteRecipeCommentByCommentNo",commentNo);	
-		}
-		/**
-		 * 닉네임을 이용
-		 * 해당 닉네임으로 작성된 모든 댓글의
-		 * 번호를 받아온다.
-		 */
-		@Override
-		public List<Integer> getMyCommentNoListByNick(String nick) {
-			return sqlSessionTemplate.selectList("recipeComment.getMyCommentNoListById", nick);
-		}
-		/**
-		 * 아이디이용
-		 * 해당 gnb no 리스트 받아온다
-		 */
-		@Override
-		public List<Integer> getMyGoodAndBadN0List(String id) {
-			return sqlSessionTemplate.selectList("recipe.getMyGoodAndBadN0List",id);
-		}
-		/**
-		 * 아이디이용
-		 * 해당 favorite no 리스트 받아온다
-		 */
-		@Override
-		public List<Integer> getMyFavoriteNoList(String id) {
-			return sqlSessionTemplate.selectList("recipe.getMyFavoriteNoList",id);
-		}
-
-		@Override
-		public void deleteGoobAndBadAll(int gnbNo) {
-			sqlSessionTemplate.delete("recipe.deleteGoobAndBadAll",gnbNo);
-			
-		}
-
-		@Override
-		public void deletefavoriteAll(int favoriteNo) {
-			sqlSessionTemplate.delete("recipe.deletefavoriteAll",favoriteNo);
-			
-		}
-
 		@Override
 		public void updateRecipeNickName(Map<String, Object> map) {
 			sqlSessionTemplate.update("recipe.updateRecipeNickName",map);
@@ -460,8 +403,39 @@ public class RecipeDAOImpl implements RecipeDAO {
 		 *  자동 완성 기능을 위해 value 값으로 부분값을 입력받아 해당하는 재료 목록을 리턴
 		 */
 		@Override
-		public List<String> getItamListByPart(String value) {		
-			System.out.println("값 : "+ value);
-			return sqlSessionTemplate.selectList("recipe.getItamListByPart",value);
+		public List<String> getItemListByPart(String value) {		
+			return sqlSessionTemplate.selectList("recipe.getItemListByPart",value);
+		}
+		/**
+		 * 아이디이용
+		 * 해당 gnb no 리스트 받아온다
+		 */
+		@Override
+		public List<Integer> getMyGoodAndBadNoList(String id) {
+			return sqlSessionTemplate.selectList("recipe.getMyGoodAndBadNoList",id);
+		}
+		/**
+		 * gnbNo를 이용
+		 * 해당 gnb정보 삭제
+		 */
+		@Override
+		public void deleteGoobAndBadAll(int gnbNo) {
+			sqlSessionTemplate.delete("recipe.deleteGoobAndBadAll",gnbNo);
+		}
+		/**
+		 * 아이디이용
+		 * 해당 favorite no 리스트 받아온다
+		 */
+		@Override
+		public List<Integer> getMyFavoriteNoList(String id) {
+			return sqlSessionTemplate.selectList("recipe.getMyFavoriteNoList",id);
+		}
+		/**
+		 * favoriteNo를 이용
+		 * 해당 favorite 정보 삭제
+		 */
+		@Override
+		public void deletefavoriteAll(int favoriteNo) {
+			sqlSessionTemplate.delete("recipe.deletefavoriteAll",favoriteNo);	
 		}
 }

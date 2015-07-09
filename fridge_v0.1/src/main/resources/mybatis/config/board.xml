@@ -122,10 +122,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
       select count(*)
       from board where contents like '%${value}%'
    </select>
-      <!-- 자신의 게시판 글 번호 -->
-   <select id="getMyBoardList" resultType="int">
-      select board_no from board where member_id=#{value}
+     <select id="getMyBoardNoListById" resultType="int">
+   		select board_no from board where member_id=#{value}
    </select>
-   
    
 </mapper>

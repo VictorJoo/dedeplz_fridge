@@ -1,16 +1,13 @@
 package org.dedeplz.fridge.model.board;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import javax.annotation.Resource;
 
 import org.dedeplz.fridge.model.board.paging.BoardListVO;
 import org.dedeplz.fridge.model.board.paging.PagingBean;
+import org.dedeplz.fridge.model.common.FileManager;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,9 +16,10 @@ public class BoardServiceImpl implements BoardService {
 
 	@Resource(name="boardDAOImpl")
 	private BoardDAO boardDAO;
-
-	@Resource(name="uploadPath")
-	private String path;
+	@Resource
+	private FileManager fileManager;
+	@Resource
+	private BoardCommentService boardCommentService;
 	
 	/**
 	 * 자유게시판 전체 포스팅 리스트
@@ -44,13 +42,8 @@ public class BoardServiceImpl implements BoardService {
 	public int registerBoard(BoardVO bvo, String items, List<FileVO> fvoList) {
 		boardDAO.registerBoard(bvo);
 		String id=bvo.getMemberId();
-/*		insertBoardItem(bvo,items);*/
 		int boardNo=bvo.getBoardNo();
-		String uploadPath=path+id;
-		File file=new File(uploadPath);
-		if(!file.exists()){
-			file.mkdir();
-		}
+		fileManager.checkUploadPath(id);
 		insertBoardFile(bvo,fvoList);
 		return boardNo;
 	}
@@ -93,7 +86,8 @@ public class BoardServiceImpl implements BoardService {
 	 */
 	@Override
 	public void deleteBoardAll(int boardNo) {
-		boardDAO.deleteBoardFile(boardNo);
+		deleteBoardFile(boardNo);
+		boardCommentService.deleteBoardCommentByBoardNo(boardNo);
 		boardDAO.deleteBoard(boardNo);
 	}
 	/**
@@ -134,6 +128,11 @@ public class BoardServiceImpl implements BoardService {
 			PagingBean pagingBean=new PagingBean(total,pn);
 			return new BoardListVO(list,pagingBean);
 		}	
+		/**
+		 * 게시물 제목에서
+		 * 입력한 키워드를 포함하는 경우
+		 * 검색 
+		 */
 		   @Override
 		   public BoardListVO getSearchByTitleList(String pageNo, String title) {
 		      HashMap<String, Object> map=new HashMap<String,Object>();
@@ -148,7 +147,11 @@ public class BoardServiceImpl implements BoardService {
 		      PagingBean pagingBean = new PagingBean(total, pn);
 		      return new BoardListVO(list, pagingBean);
 		   }
-
+		   /**
+		    * 게시물 작성자의 닉네임에
+		    * 입력한 키워드를 포함하는 경우
+		    * 검색
+		    */
 		   @Override
 		   public BoardListVO getSearchByWriterList(String pageNo, String nick) {
 		      HashMap<String, Object> map=new HashMap<String,Object>();
@@ -163,7 +166,11 @@ public class BoardServiceImpl implements BoardService {
 		      PagingBean pagingBean = new PagingBean(total, pn);
 		      return new BoardListVO(list, pagingBean);
 		   }
-
+		   /**
+		    * 게시물 내용에
+		    * 입력한 키워드를 포함하는 경우 
+		    * 검색
+		    */
 		   @Override
 		   public BoardListVO getSearchByContentsList(String pageNo, String contents) {
 		      HashMap<String, Object> map=new HashMap<String,Object>();
@@ -178,15 +185,14 @@ public class BoardServiceImpl implements BoardService {
 		      PagingBean pagingBean = new PagingBean(total, pn);
 		      return new BoardListVO(list, pagingBean);
 		   }
-		   
-		
-		   
-		   
-		   
-		   
+		   /**
+			 * 파일 업로드 시 콘텐츠의 스트링 값에서
+			 * 이미지 소스 부분만을 받아와서
+			 * FileVO 리스트로 반환
+			 */		   
 		@Override
 		public List<FileVO> getFvoList(String contents) {
-			List<String> list = convertHtmlimg(contents);
+			List<String> list = fileManager.convertHtmlimg(contents);
 			List<FileVO> fvoList=new ArrayList<FileVO>();
 			for (String imgUrl : list) {
 				FileVO fvo = new FileVO();
@@ -199,30 +205,10 @@ public class BoardServiceImpl implements BoardService {
 		}
 		
 		/**
-		 * java 정규 표현식을 이용한 java 이미지 태그 추출(이미지 저장 경로)
-		 * 
-		 * @param img
-		 * @return
+		 * 아이디를 이용 등록한 자유게시판 번호를 받아온다
 		 */
-		public List<String> convertHtmlimg(String img) {
-			Pattern nonValidPattern = Pattern
-					.compile("<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>");
-
-			List<String> result = new ArrayList<String>();
-			Matcher matcher = nonValidPattern.matcher(img);
-			while (matcher.find()) {
-				result.add(matcher.group(1));
-			}
-			return result;
+		@Override
+		public List<Integer> getMyBoardNoListById(String id) {
+			return boardDAO.getMyBoardNoListById(id);
 		}
-		
-		 /**
-	       * 나의 자유게시판 글 번호 가져오기
-	       */
-	      @Override
-	      public List<Integer> getMyBoardList(String id) {
-	      //return sqlSessionTemplate.selectList("recipe.getMyRecipeList", id);
-
-	         return boardDAO.getMyBoardList(id);
-	      }
 }

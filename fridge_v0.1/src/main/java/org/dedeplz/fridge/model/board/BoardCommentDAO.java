@@ -12,6 +12,7 @@ public interface BoardCommentDAO {
 
 	public void updateBoardComment(BoardCommentVO bcvo);
 
-	public List<Integer> getMyBoardCommentList(String nick);
+	public void deleteBoardCommentByBoardNo(int boardNo);
 
+	public List<Integer> getMyBoardCommentNoByNick(String nick);
 }

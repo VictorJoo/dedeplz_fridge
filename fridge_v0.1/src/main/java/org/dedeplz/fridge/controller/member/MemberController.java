@@ -4,7 +4,6 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
-
 import org.dedeplz.fridge.model.common.LoginCheck;
 import org.dedeplz.fridge.model.member.MemberService;
 import org.dedeplz.fridge.model.member.MemberVO;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
+
 @Controller
 public class MemberController {
    @Resource
@@ -22,14 +22,6 @@ public class MemberController {
    @Resource
    private RecipeService recipeService;
    
-   /**
-    * 메인 화면 (home.jsp)로 이동
-    * @return
-    */
-/*   @RequestMapping("home.do")
-   public String home(){
-      return "home";
-   }*/
    /**
     *회원 가입약관 joinclause_view.jsp로 이동 
     * @return
@@ -72,13 +64,6 @@ public class MemberController {
    public String showMyPage(){
       return "member_mypage";
    }
-/*   *//**
-    * 업데이트 전 비밀번호 체크 폼 (update_check_form.jsp)로 이동
-    *//*
-   @RequestMapping("member_updateMemberForm.do")
-   public String updateMemeberForm(){
-      return "member_update_check_form";
-   }*/
    /**
     *회원 탈퇴 전 비밀번호 확인form.jsp로 이동 
     * @return
@@ -158,7 +143,6 @@ public class MemberController {
             return "member_login_fail";
          else {
             int totalLove=memberService.getTotalLove(vo.getId());
-            System.out.println("totalLove:"+totalLove);
             mvo.setLove(totalLove);
             memberService.updateMemberLove(mvo);
             HttpSession session = request.getSession();
@@ -184,7 +168,6 @@ public class MemberController {
                return "member_upgrade_result";
             }
             session.setAttribute("mvo", mvo);
-            System.out.println("로그인 mvo:"+mvo);
             return "redirect:home.do";
          }
       }     
@@ -213,7 +196,6 @@ public class MemberController {
       @RequestMapping("member_update.do")
       public ModelAndView updateMember(@Valid MemberVO vo,BindingResult result,HttpServletRequest request, HttpSession session){
             if(result.hasErrors()){
-            
             return new ModelAndView("member_update_form"); 
          }
          MemberVO vo1 = (MemberVO) session.getAttribute("mvo");
@@ -248,13 +230,13 @@ public class MemberController {
       public String passwordCheckDelete(MemberVO vo, HttpServletRequest request) {
          MemberVO mvo = memberService.login(vo);
          if (mvo == null) {
-            return "member_password_check_fail";
-         } else{
-        	memberService.deleteAllMemberInfo(mvo);
-        	HttpSession session = request.getSession(false);
-        	if (session != null)
-            session.invalidate();
-         }
+             return "member_password_check_fail";
+          } else{
+        	  memberService.deleteAllMemberInfoByIdAndNick(mvo);
+          }
+          HttpSession session = request.getSession(false);
+          if (session != null)
+             session.invalidate();
          return "member_delete_result";
       }  
       /**

@@ -41,7 +41,7 @@ public interface BoardDAO {
 
 	public int getTotalSearchByTitleCount(String title);
 
-	public List<Integer> getMyBoardList(String id);
+	public List<Integer> getMyBoardNoListById(String id);
 
 	
 

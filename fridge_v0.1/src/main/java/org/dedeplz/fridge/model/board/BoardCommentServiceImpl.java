@@ -18,9 +18,7 @@ public class BoardCommentServiceImpl implements BoardCommentService{
 	@Override
 	public void registBoardComment(BoardCommentVO bcvo) {
 		boardCommentDAO.registBoardComment(bcvo);
-		//boardCommentDAO.getListBoardComment();
 	}
-
 	/**
 	 * 자유게시판 댓글 전체 리스트
 	 */
@@ -45,14 +43,24 @@ public class BoardCommentServiceImpl implements BoardCommentService{
 	public void updateBoardComment(BoardCommentVO bcvo) {
 		 boardCommentDAO.updateBoardComment(bcvo);
 	}
-	 /**
-	    * 자유게시판 자신이 쓴 모든 댓글 번호 가져오기 (탈퇴할때)
-	    */
-	   @Override
-	   public List<Integer> getMyBoardCommentList(String nick) {
-
-	      return boardCommentDAO.getMyBoardCommentList(nick);
-	   }
+	/**
+	 * 게시판 번호를 이용
+	 * 해당 게시물에 작성된 모든 댓글을 삭제
+	 */
+	@Override
+	public void deleteBoardCommentByBoardNo(int boardNo) {
+		boardCommentDAO.deleteBoardCommentByBoardNo(boardNo);
+		
+	}
+	/**
+	 * 회원 닉네임을 이용해
+	 * 회원 닉네임으로 작성된 게시판 댓글의 
+	 * 모든 번호를 받아온다
+	 */
+	@Override
+	public List<Integer> getMyBoardCommentNoByNick(String nick) {
+		return boardCommentDAO.getMyBoardCommentNoByNick(nick);
+	}
 	
 	
 

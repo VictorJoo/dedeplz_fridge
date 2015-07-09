@@ -6,6 +6,8 @@ import javax.annotation.Resource;
 
 import org.dedeplz.fridge.model.board.BoardCommentService;
 import org.dedeplz.fridge.model.board.BoardService;
+import org.dedeplz.fridge.model.common.FileManager;
+import org.dedeplz.fridge.model.recipe.RecipeCommentService;
 import org.dedeplz.fridge.model.recipe.RecipeDAO;
 import org.dedeplz.fridge.model.recipe.RecipeService;
 import org.springframework.stereotype.Service;
@@ -23,14 +25,14 @@ public class MemberServiceImpl implements MemberService {
 	private BoardService boardService;
 	@Resource
 	private BoardCommentService boardCommentService;
-    /* (non-Javadoc)
-    * @see org.dedeplz.fridge.model.MemberService#allMember()
-   */
+	@Resource
+	private RecipeCommentService recipeCommentService;
+	@Resource
+	private FileManager fileManager;
        /**
        * 아이디 찾기
        */
    public MemberVO findById(String id) {
-      // TODO Auto-generated method stub
       return memberDAO.findById(id);
    }
    /**
@@ -59,17 +61,9 @@ public class MemberServiceImpl implements MemberService {
     */
    @Override
    public void updateMember(MemberVO vo) {
-      System.out.println("updateServiceImpl");
       memberDAO.updateMember(vo);
       recipeService.updateRecipeNickName(vo);
    }
-   /**
-    * 회원 탈퇴
-    */
-/*      @Override
-      public void deleteMember(MemberVO vo) {
-         memberDAO.deleteMember(vo);
-      }*/
    /**
     * 닉네임 중복체크
    */
@@ -148,50 +142,57 @@ public class MemberServiceImpl implements MemberService {
       memberDAO.updateMemberLove(mvo);
 
    }
-   
    /**
-	 * 회원탈퇴 회원이 등록한 정보를 삭제
-	 */
-	@Override
-	@Transactional
-	public void deleteAllMemberInfo(MemberVO mvo) {	
-		List<String> recipeNoList = recipeService.getMyRecipeList(mvo.getId());
-		List<Integer> commentNoList = recipeService.getMyCommentNoListByNick(mvo.getNick());
-		List<Integer> boardCommentList = boardCommentService.getMyBoardCommentList(mvo.getNick());
-		List<Integer> boardList = boardService.getMyBoardList(mvo.getId());
-		List<Integer> goobAndBadList=recipeService.getMyGoodAndBadN0List(mvo.getId());
-		List<Integer> favoriteList =recipeService.getMyFavoriteNoList(mvo.getId());
-		if(commentNoList!=null){
+    * 로그인 한 아이디와 닉네임을 이용
+    * 해당 아이디로 탈퇴할 때 회원과 관련된 
+    * 모든 정보 삭제
+    */
+   @Transactional
+   @Override
+   public void deleteAllMemberInfoByIdAndNick(MemberVO mvo) {  
+	   List<Integer> commentNoList = recipeCommentService.getMyCommentNoListByNick(mvo.getNick());
+ 	  if(commentNoList!=null){
 			for (int y = 0; y < commentNoList.size(); y++) {
-				recipeService.deleteAllRecipeCommentByCommnetNo(commentNoList.get(y));
+				recipeCommentService.deleteAllRecipeCommentByCommnetNo(commentNoList.get(y));
 			}
-		}
-		if(goobAndBadList!=null){
-			for (int i = 0; i < goobAndBadList.size(); i++) {
-				recipeService.deleteGoobAndBadAll(goobAndBadList.get(i));
+		  }
+       //아이디로 추천한 좋아요 싫어요 삭제
+ 	  List<Integer> goobAndBadList=recipeService.getMyGoodAndBadNoList(mvo.getId());
+ 		if(goobAndBadList!=null){
+ 			for (int i = 0; i < goobAndBadList.size(); i++) {
+ 				recipeService.deleteGoobAndBadAll(goobAndBadList.get(i));
+ 			}
+ 		}
+       //아이디로 등록한 즐겨찾기 리스트 삭제
+ 		List<Integer> favoriteList =recipeService.getMyFavoriteNoList(mvo.getId());
+ 		if(favoriteList!=null){
+ 			for (int i = 0; i < favoriteList.size(); i++) {
+ 				recipeService.deleteFavoriteAll(favoriteList.get(i));
+ 			}
+ 		}
+ 	  //아이디로 작성된 레시피 번호 받아서 정보 삭제
+      List<String> recipeList=recipeService.getMyRecipeList(mvo.getId());
+      if(recipeList!=null){
+    	  for(int i=0;i<recipeList.size();i++){
+    		  recipeService.deleteRecipeRelationInfo(Integer.parseInt(recipeList.get(i)));
+    		  recipeService.deleteRecipe(Integer.parseInt(recipeList.get(i)));
+      	  }
+      }
+      //닉네임으로 작성된 보드댓글 삭제
+      List<Integer> boardCommentNoList=boardCommentService.getMyBoardCommentNoByNick(mvo.getNick());
+      if(boardCommentNoList!=null){
+      	for (int i = 0; i < boardCommentNoList.size(); i++) {
+				boardCommentService.deleteBoardComment(boardCommentNoList.get(i));
 			}
-		}
-		if(favoriteList!=null){
-			for (int i = 0; i < favoriteList.size(); i++) {
-				recipeService.deletefavoriteAll(favoriteList.get(i));
-			}
-		
-		if(recipeNoList!=null){
-			for (int i = 0; i < recipeNoList.size(); i++) {
-				recipeService.deleteRecipeAll(mvo.getId(), Integer.parseInt(recipeNoList.get(i)));
-			}
-		}
-		if(boardCommentList!=null){
-			for (int i = 0; i < boardCommentList.size(); i++) {
-				boardCommentService.deleteBoardComment(boardCommentList.get(i));
-			}
-		}
-		if(boardList!=null){
-			for (int i = 0; i < boardList.size(); i++) {
-				boardService.deleteBoardAll(boardList.get(i));
-			}
-		}
-		memberDAO.deleteMember(mvo);
-	}
+      }
+      //아이디로 작성된 게시물 정보 삭제
+      List<Integer> boardNoList=boardService.getMyBoardNoListById(mvo.getId());
+      if(boardNoList!=null){
+     	for(int i=0;i<boardNoList.size();i++){
+     		boardService.deleteBoardAll(boardNoList.get(i));
+     	}
+      }
+      fileManager.deleteDirectoryById(mvo.getId());
+      memberDAO.deleteMember(mvo);
 }
 }

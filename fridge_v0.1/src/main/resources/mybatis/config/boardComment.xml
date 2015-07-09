@@ -35,10 +35,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    <update id="updateBoardComment" parameterType="bcvo">
       update board_comment set comment_contents=#{commentContents} where comment_no=${commentNo}
    </update> 
-   
-      <!-- 자신이 쓴 자유게시판 댓글 번호 가져오기 -->
-   <select id="getMyBoardCommentList" resultType="int">
-    select comment_no from board_comment where comment_nick=#{value}
-   </select> 
-   
+     <delete id="deleteBoardCommentByBoardNo">
+   		delete from board_comment where comment_board_no=#{value}
+   </delete>
+   <select id="getMyBoardCommentNoByNick" resultType="int">
+   		select comment_no from board_comment where comment_nick=#{value}
+   </select>
 </mapper>

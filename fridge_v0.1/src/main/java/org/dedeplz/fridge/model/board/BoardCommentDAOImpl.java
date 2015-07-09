@@ -43,13 +43,24 @@ public class BoardCommentDAOImpl implements BoardCommentDAO{
 	public void updateBoardComment(BoardCommentVO bcvo) {
 		 sqlSessionTemplate.update("boardComment.updateBoardComment",bcvo);
 	}
-	
 	/**
-	    * 자유게시판 자신이 쓴 모든 댓글 번호 가져오기 (탈퇴할때)
-	    */
-	   @Override
-	   public List<Integer> getMyBoardCommentList(String nick) {
-	      return sqlSessionTemplate.selectList("boardComment.getMyBoardCommentList",nick);
-	   }
+	 * 게시물 번호를 이용
+	 * 해당 게시물에 작성된 댓글을 삭제
+	 */
+	@Override
+	public void deleteBoardCommentByBoardNo(int boardNo) {
+		sqlSessionTemplate.delete("boardComment.deleteBoardCommentByBoardNo",boardNo);
+		
+	}
+	/**
+	 * 회원 닉네임을 이용해
+	 * 회원 닉네임으로 작성된 게시판 댓글의 
+	 * 모든 번호를 받아온다
+	 */
+	@Override
+	public List<Integer> getMyBoardCommentNoByNick(String nick) {
+		return sqlSessionTemplate.selectList("boardComment.getMyBoardCommentNoByNick",nick);
+	}
 
+	
 }

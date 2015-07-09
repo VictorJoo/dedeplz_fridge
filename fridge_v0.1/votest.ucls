@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.8" icons="true" always-add-relationships="false" generalizations="true" realizations="true" 
+  associations="true" dependencies="false" nesting-relationships="true">  
+  <class id="1" language="java" name="org.dedeplz.fridge.model.board.FileVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/board/FileVO.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="333" width="153" x="146" y="-107"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="org.dedeplz.fridge.model.board.BoardVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/board/BoardVO.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="549" width="290" x="339" y="-107"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="org.dedeplz.fridge.model.board.BoardCommentVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/board/BoardCommentVO.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="387" width="241" x="669" y="-107"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="org.dedeplz.fridge.model.board.paging.BoardListVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/board/paging/BoardListVO.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="-1" width="-1" x="126" y="395"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="org.dedeplz.fridge.model.recipe.paging.FavoriteListVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/recipe/paging/FavoriteListVO.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="207" width="250" x="1657" y="410"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="org.dedeplz.fridge.model.recipe.FavoriteVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/recipe/FavoriteVO.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="387" width="207" x="1657" y="1107"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="org.dedeplz.fridge.model.recipe.FileVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/recipe/FileVO.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="333" width="153" x="1120" y="410"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="org.dedeplz.fridge.model.recipe.RecipeCommentVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/recipe/RecipeCommentVO.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="549" width="304" x="1313" y="410"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="org.dedeplz.fridge.model.member.MemberVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/member/MemberVO.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="657" width="344" x="1947" y="410"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="org.dedeplz.fridge.model.recipe.ItemVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/recipe/ItemVO.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="243" width="146" x="2331" y="410"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="org.dedeplz.fridge.model.recipe.RecipeVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/recipe/RecipeVO.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="549" width="277" x="2517" y="410"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="org.dedeplz.fridge.model.recipe.RecipeItemVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/recipe/RecipeItemVO.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="279" width="154" x="2834" y="410"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="org.dedeplz.fridge.model.recipe.TopRecipeVO" project="fridge_v0.1" 
+    file="/fridge_v0.1/src/main/java/org/dedeplz/fridge/model/recipe/TopRecipeVO.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="279" width="140" x="3028" y="410"/>    
+    <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="14">    
+    <end type="SOURCE" refId="4" navigable="false">      
+      <attribute id="15" name="list"/>      
+      <multiplicity id="16" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="17">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="18" name="list"/>      
+      <multiplicity id="19" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

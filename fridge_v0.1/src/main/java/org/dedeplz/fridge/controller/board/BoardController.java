@@ -1,6 +1,5 @@
 package org.dedeplz.fridge.controller.board;
 
-import java.io.File;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -14,6 +13,7 @@ import org.dedeplz.fridge.model.board.BoardService;
 import org.dedeplz.fridge.model.board.BoardVO;
 import org.dedeplz.fridge.model.board.FileVO;
 import org.dedeplz.fridge.model.board.paging.BoardListVO;
+import org.dedeplz.fridge.model.common.FileManager;
 import org.dedeplz.fridge.model.common.LoginCheck;
 import org.dedeplz.fridge.model.member.MemberVO;
 import org.springframework.stereotype.Controller;
@@ -25,9 +25,8 @@ import org.springframework.web.servlet.ModelAndView;
 public class BoardController {
 	@Resource(name="boardServiceImpl")
 	private BoardService boardService;
-	@Resource(name = "uploadPath")
-	private String path;
-	
+	@Resource
+	private FileManager fileManager;
 	@Resource(name="boardCommentServiceImpl")
 	private BoardCommentService boardCommentService;
 /**
@@ -63,11 +62,9 @@ public class BoardController {
 	 */
 	@RequestMapping("registerBoard.do")
 	public ModelAndView registerBoard(BoardVO bvo, String items) {
-		
 		int boardNo = 0;
 		String contents = bvo.getContents();
 		List<FileVO> fvoList=boardService.getFvoList(contents);
-		
 		try {
 			boardNo = boardService.registerBoard(bvo,items,fvoList);
 		} catch (Exception e) {
@@ -134,21 +131,9 @@ public class BoardController {
 	@RequestMapping("deleteBoard.do")
 	public ModelAndView deleteForm(BoardVO bvo, HttpSession session) {
 		MemberVO mvo = (MemberVO) session.getAttribute("mvo");
-		
-		
 		String id = mvo.getId();
 		List<String> list = boardService.getFileName(bvo.getBoardNo());
-		File file = new File(path + "\\" + id);
-		File f[] = file.listFiles();
-		for (int i = 0; i < list.size(); i++) {
-			for (int y = 0; y < f.length; y++) {
-				if (f[y].getName().equals(list.get(i))) {
-					f[y].delete();
-				}
-			}
-		}
-		
-		
+		fileManager.deleteImg(list,id);
 		boardService.deleteBoardAll(bvo.getBoardNo());
 		return new ModelAndView("redirect:BoardList.do");
 	}
@@ -171,11 +156,9 @@ public class BoardController {
 	   @RequestMapping("updateBoard.do")
 	   public ModelAndView updateBoard(HttpServletRequest request,
 	         HttpServletResponse response, BoardVO bvo, String items) {
-	    //  List<String> list = convertHtmlimg(bvo.getContents());
 	      boardService.deleteBoardFile(bvo.getBoardNo());
 	      boardService.updateBoard(bvo);
 	      List<FileVO> fvoList=boardService.getFvoList(bvo.getContents());
-	      
 	      boardService.insertBoardFile(bvo, fvoList);
 	      return new ModelAndView("redirect:registerBoardResult.do?boardNo="
 	            + bvo.getBoardNo());

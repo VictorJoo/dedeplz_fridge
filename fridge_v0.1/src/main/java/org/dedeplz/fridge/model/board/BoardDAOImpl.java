@@ -89,7 +89,6 @@ public class BoardDAOImpl implements BoardDAO {
 	 */
 	@Override
 	public List<BoardVO> getSearchByCategoryList(HashMap<String, Object> paramMap) {
-		System.out.println(paramMap);
 		return  sqlSessionTemplate.selectList("board.getSearchByCategoryList",paramMap);
 	}
 	   /**
@@ -104,7 +103,6 @@ public class BoardDAOImpl implements BoardDAO {
 	 */
 	@Override
 	   public List<BoardVO> getSearchByTitleList(HashMap<String,Object> map) {
-	      System.out.println("맵:" + map);
 	      return sqlSessionTemplate.selectList("board.getSearchByTitleList",map);
 	   }
 	 /**
@@ -112,7 +110,6 @@ public class BoardDAOImpl implements BoardDAO {
 	    */
 	   @Override
 	   public int getTotalSearchByTitleCount(String title) {
-	      System.out.println("getTotalSearchByTitleCount");
 	      return sqlSessionTemplate.selectOne("board.getTotalSearchByTitleCount",title);
 	   }
 	   /**
@@ -143,15 +140,14 @@ public class BoardDAOImpl implements BoardDAO {
 	   public int getTotalSearchByContentsCount(String contents) {
 	      return sqlSessionTemplate.selectOne("board.getTotalSearchByContentsCount",contents);
 	   }
-	   
 	   /**
-	       * 자신의 자유게시판 글번호가져오기
-	       */
-	   @Override
-	   public List<Integer> getMyBoardList(String id) {
-	      return sqlSessionTemplate.selectList("board.getMyBoardList", id);
-	   }
-	
+	    * 아아디를 이용 
+	    * 해당 아이디로 작성한 게시판의 모든 번호를 받아온다
+	    */
+	@Override
+	public List<Integer> getMyBoardNoListById(String id) {
+		return sqlSessionTemplate.selectList("board.getMyBoardNoListById",id);
+	}
 	
 
 }

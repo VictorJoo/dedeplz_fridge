@@ -9,7 +9,6 @@ import org.dedeplz.fridge.model.member.MemberVO;
 import org.dedeplz.fridge.model.recipe.paging.FavoriteListVO;
 
 public interface RecipeService {
-	//public int getItemNo(String itemName);
 	public void insertRecipeItem(RecipeItemVO rivo);
 	public RecipeVO getRecipeInfo(int recipeNo);
 	public int registerRecipe(RecipeVO rvo,String items,List<FileVO> fvoList) throws Exception;
@@ -40,12 +39,12 @@ public interface RecipeService {
 	public HashMap<String, Object> checkGoodAndBad(String memberId, int recipeNo);
 	public List<HashMap<String, Object>> getFavoriteInfo(MemberVO mvo);
 	public Map<String, Object> getMyRecipeInfo(String id);
-	public void deleteAllRecipeCommentByCommnetNo(int commentNo);
-	public List<Integer> getMyCommentNoListByNick(String nick);
-	public List<Integer> getMyGoodAndBadN0List(String id);
-	public List<Integer> getMyFavoriteNoList(String id);
-	public void deleteGoobAndBadAll(int gnbNo);
-	public void deletefavoriteAll(int favoriteNo);
+	public List<String> getItemListByPart(String value);
+	public void deleteRecipeRelationInfo(int recipeNo);
+	public void deleteRecipe(int recipeNo);
 	public void updateRecipeNickName(MemberVO vo);
-	public List<String> getItamListByPart(String value);
+	public List<Integer> getMyGoodAndBadNoList(String id);
+	public void deleteGoobAndBadAll(int gnbNo);
+	public List<Integer> getMyFavoriteNoList(String id);
+	public void deleteFavoriteAll(int favoriteNo);
 }

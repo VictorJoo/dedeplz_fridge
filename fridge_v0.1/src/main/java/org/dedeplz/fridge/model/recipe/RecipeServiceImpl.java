@@ -1,6 +1,5 @@
 package org.dedeplz.fridge.model.recipe;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -14,6 +13,7 @@ import java.util.StringTokenizer;
 
 import javax.annotation.Resource;
 
+import org.dedeplz.fridge.model.common.FileManager;
 import org.dedeplz.fridge.model.member.MemberVO;
 import org.dedeplz.fridge.model.recipe.paging.FavoriteListVO;
 import org.dedeplz.fridge.model.recipe.paging.PagingBean;
@@ -25,9 +25,10 @@ public class RecipeServiceImpl implements RecipeService{
 	
 	@Resource(name="recipeDAOImpl")
 	private RecipeDAO recipeDAO;
-	@Resource(name="uploadPath")
-	private String path;
-	
+	@Resource
+	private RecipeCommentService recipeCommentService;
+	@Resource
+	private FileManager fileManager;
 	/**
 	 * 등록된 모든 레시피의 번호를 받아온다.
 	 */
@@ -199,13 +200,7 @@ public class RecipeServiceImpl implements RecipeService{
 			String id=rvo.getMemberId();
 			insertRecipeItem(rvo,items);
 			int recipeNo=rvo.getRecipeNo();
-			System.out.println(path);
-			String uploadPath=path+id;
-			File file=new File(uploadPath);
-			System.out.println(file.isDirectory());
-			if(!file.exists()){
-				file.mkdir();
-			}
+			fileManager.checkUploadPath(id);
 			insertRecipeFile(rvo,fvoList);
 			return recipeNo;
 	}
@@ -221,7 +216,6 @@ public class RecipeServiceImpl implements RecipeService{
 			fvo.setFilePath(fvoList.get(i).getFilePath());
 			fvo.setRecipeNo(rvo.getRecipeNo());
 			recipeDAO.insertRecipeFile(fvo);
-			System.out.println("fileupload ok:"+fvoList.get(i).getFileName());
 		}
 	}
 	/**
@@ -231,55 +225,34 @@ public class RecipeServiceImpl implements RecipeService{
 	@Override
 	@Transactional
 	public void deleteRecipeAll(String id,int recipeNo) {
+		deleteRecipeImgByIdAndRecipeNo(id,recipeNo);
+		deleteRecipeRelationInfo(recipeNo);
+		deleteRecipe(recipeNo);
+	}
+	/**
+	 * 아이디 디렉토리 내 존재하는 레시피 사진을
+	 * 삭제
+	 * @param id
+	 * @param recipeNo
+	 */
+	private void deleteRecipeImgByIdAndRecipeNo(String id, int recipeNo) {
 		List<String> list = recipeDAO.getFileName(recipeNo);
-		File file = new File(path + id);
-		File f[] = file.listFiles();
-		if(f.length!=0){
-			for (int i = 0; i < list.size(); i++) {
-				for (int y = 0; y < f.length; y++) {
-					if (f[y].getName().equals(list.get(i))) {
-						f[y].delete();
-					}//if
-				}//for
-			}//for
-		}	
-		int gnBNoAllCount=recipeDAO.getGoodAndBadNoCountByRecipeNo(recipeNo);
-		int favoriteNoAllCount=recipeDAO.getFavoriteNoAllList(recipeNo);
-		List<Integer> recipeCommentNoList=recipeDAO.getCommentNoListByRecipeNo(recipeNo);
-		recipeDAO.deleteRecipeFile(recipeNo);
-		recipeDAO.deleteRecipeItem(recipeNo);
-		if(gnBNoAllCount!=0){
-			recipeDAO.deleteGoodAndBad(recipeNo);
-		}
-		if(favoriteNoAllCount!=0){
-			recipeDAO.deleteFavorites(recipeNo);
-		}
-		if(recipeCommentNoList!=null){
-			for(int i=0;i<recipeCommentNoList.size();i++){
-				recipeDAO.deleteRecipeCommentByCommentNo(recipeCommentNoList.get(i));
-			}
-		}
-		recipeDAO.deleteRecipe(recipeNo);
+		fileManager.deleteImg(list, id);
 	}
 	
-	
-	/**
-	 * 사진의 path를 이용해 해당 레시피의 번호를 받아온다.
-	 */
+/**
+ * 사진의 path를 이용해 해당 레시피의 번호를 받아온다.
+ * @param filePath
+ * @return
+ */
 	@Override
 	public int getRecipeNoByPath(String filePath) {
 		return recipeDAO.getRecipeNoByPath(filePath);
 	}
-	/**
-	 * 레시피 번호를 이용해 해당 레시피의 모든 사진 이름을 받아온다.
-	 */
-/*	@Override
-	public List<String> getFileName(int recipeNo) {
-		List<String> list=recipeDAO.getFileName(recipeNo);
-		return list;
-	}*/
+
 	/**
 	 * 레시피 수정
+	 * @param rvo
 	 */
 	@Override
 	public void updateRecipe(RecipeVO rvo) {
@@ -289,6 +262,8 @@ public class RecipeServiceImpl implements RecipeService{
 	}
 	/**
 	 * 태크 값을 이용해서 recipe_item 테이블에 정보 입력
+	 * @param rvo
+	 * @param items
 	 */
 	@Override
 	@Transactional
@@ -299,15 +274,15 @@ public class RecipeServiceImpl implements RecipeService{
 			 String temp = st.nextToken(); 
 			 itemUpdate(temp.trim());
 			 int no=getItemNo(temp.trim());
-			 System.out.println(no);
-			 //레시피 아이템 등록
 			 rivo.setItemNo(no);
 			 rivo.setRecipeNo(rvo.getRecipeNo());
 			 recipeDAO.insertRecipeItem( rivo );
 		 }
 	}
 	/**
-	   * 로그인 한 사용자가 레시피를 즐겨찾기 등록
+	 * 로그인 한 사용자가 레시피를 즐겨찾기 등록
+	 * @param fvo
+	 * @return
 	 */
 	@Override
 	public String registerFavorite(FavoriteVO fvo) {
@@ -319,12 +294,13 @@ public class RecipeServiceImpl implements RecipeService{
 		return str;
 	}
 	/**
-	 * recipeNo 중복 체크 
+	 * recipeNo 중복 체크
+	 * @param fvo
+	 * @return
 	 */
 	 public int getRecipeNoById(FavoriteVO fvo){
 		int  index = -1;
 	    List<Integer> recipeList = recipeDAO.findRecipeNoById(fvo.getMemberId());
-	    System.out.println(recipeList);
 	    for(int i = 0; i < recipeList.size(); i++){
 	        if(fvo.getRecipeNo() == recipeList.get(i)){
 	           index = i;
@@ -332,6 +308,13 @@ public class RecipeServiceImpl implements RecipeService{
 	    }
 	    return index;
 	}
+	 /**
+	  * 아이디 즐겨찾기 페이지 no를 이용
+	  * 즐겨찾기 목록을 받아온다
+	  * @param pageNo
+	  * @param id
+	  * @return
+	  */
 	   @Override
 	   public FavoriteListVO getFavoriteRecipeList(String pageNo, String id) {
 	      if(pageNo==null||pageNo=="") {
@@ -341,9 +324,7 @@ public class RecipeServiceImpl implements RecipeService{
 	      favoriteMap.put("pageNo", pageNo);
 	      favoriteMap.put("id", id);
 	      List<FavoriteVO> favoriteList=recipeDAO.getFavoriteRecipeList(favoriteMap);
-	      System.out.println(favoriteList);
 	      int total=recipeDAO.totalFavoriteContent(id);
-	      System.out.println("토탈"+total);
 	      PagingBean paging=new PagingBean(total,Integer.parseInt(pageNo));
 	      FavoriteListVO lvo=new FavoriteListVO(favoriteList,paging);
 	      return lvo;
@@ -351,15 +332,18 @@ public class RecipeServiceImpl implements RecipeService{
 	   
 	   /**
 	    * 즐겨찾기 삭제
+	    * @param fvo
 	    */
 	   @Override
 	   public void deleteFavorite(FavoriteVO fvo) {
 	      recipeDAO.deleteFavorite(fvo);
 	   }
 	   
-	   /**
-	    * 레시피 번호를 이용해서 해당 레시피의 정보를 받아온다.
-	    */
+	  /**
+	   * 레시피 번호를 이용해서 해당 레시피의 정보를 받아온다.
+	   * @param recipeNo
+	   * @return
+	   */
 	   @Override
 	   public RecipeVO getRecipeInfo(int recipeNo) {
 	      recipeDAO.updateHitsByRecipeNo(recipeNo);
@@ -368,22 +352,28 @@ public class RecipeServiceImpl implements RecipeService{
 	   }
 	 
 	   /**
-	    * 
+	    * id와 레시피 no를 이용 즐겨찾기 총 수를 받아온다
+	    * @param map
+	    * @return
 	    */
 	@Override
 	public int getFavoriteRecipe(HashMap<String,Object> map) {
-		System.out.println(map);
 		return recipeDAO.getFavoriteRecipe(map);
 	}
 	/**
-	 * 
+	 * 아이디를 이용
+	 * 해당 아이디로 작성된 모든 레시피 no를 받아온다
+	 * @param id
+	 * @return
 	 */
 	@Override
 	public List<String> getMyRecipeList(String id) {
 		return recipeDAO.getMyRecipeList(id);
 	}
 	/**
-	 * 
+	 * top 1,2,3 에 해당하는
+	 * 레시피 정보를 list로 반환
+	 * @return
 	 */
 	public List<String> getTopPointRecipeList(){
 		List<String> list = getAllRecipeNo();
@@ -418,6 +408,11 @@ public class RecipeServiceImpl implements RecipeService{
 			return arg0.getTotalGood() > arg1.getTotalGood() ? -1 : arg0.getTotalGood() < arg1.getTotalGood() ? 1:0;
 		}
 	}
+	/**
+	 * 레시피 업데이트시 필요한 정보를 반환
+	 * @param recipeNo
+	 * @return
+	 */
 	@Override
 	public Map<String, Object> getUpdateFormInfo(int recipeNo) {
 		Map<String ,Object> map=new HashMap<String, Object>();
@@ -430,6 +425,9 @@ public class RecipeServiceImpl implements RecipeService{
 	/**
 	 * 아이디와 레시피 no,goodCase를 이용해서
 	 * good정보 수정
+	 * @param memberId
+	 * @param recipeNo
+	 * @param goodCase
 	 */
 	@Override
 	public void updateGood(String memberId, int recipeNo,String goodCase) {	
@@ -447,6 +445,9 @@ public class RecipeServiceImpl implements RecipeService{
 	/**
 	 * 아이디와 레시피 no,badCase를 이용해서
 	 * bad정보 수정
+	 * @param memberId
+	 * @param recipeNo
+	 * @param badCase
 	 */
 	@Override
 	public void updateBad(String memberId, int recipeNo, String badCase) {
@@ -462,8 +463,11 @@ public class RecipeServiceImpl implements RecipeService{
 		}
 	}
 	/**
-	 * 추천 비추천 테이블 유무 체크 및
+	 *  추천 비추천 테이블 유무 체크 및
 	 * good bad 값 호출
+	 * @param memberId
+	 * @param recipeNo
+	 * @return
 	 */
 	@Override
 	public HashMap<String, Object> checkGoodAndBad(String memberId, int recipeNo) {
@@ -480,9 +484,11 @@ public class RecipeServiceImpl implements RecipeService{
 		return goodAndBadResult;
 	}
 	
-	/**
-	 * 자신이 추가한 즐겨찾기 리스트를 가져와 home에 출력한다.
-	 */
+/**
+ * 자신이 추가한 즐겨찾기 리스트를 가져와 home에 출력한다.
+ * @param mvo
+ * @return
+ */
 	@Override
 	public List<HashMap<String, Object>> getFavoriteInfo(MemberVO mvo) {
 		List<String> fList = recipeDAO.getFavoriteListByMemberId(mvo.getId());
@@ -491,6 +497,8 @@ public class RecipeServiceImpl implements RecipeService{
 
 	/**
 	 * 자기가 쓴 레시피 정보를 출력한다.
+	 * @param id
+	 * @return
 	 */
 	@Override
 	public Map<String, Object> getMyRecipeInfo(String id) {
@@ -515,7 +523,7 @@ public class RecipeServiceImpl implements RecipeService{
 			 RecipeVO rvo=getRecipeInfoNoHits(Integer.parseInt(recipeNoList.get(i)));
 			 String tag=getItemTag(Integer.parseInt(recipeNoList.get(i)));
 			 int goodPoint =recipeDAO.getTotalGood(Integer.parseInt(recipeNoList.get(i)));
-			 int commentCount =recipeDAO.getCountOfCommentByRecipeNo(Integer.parseInt(recipeNoList.get(i)));
+			 int commentCount =recipeCommentService.getCountOfCommentByRecipeNo(Integer.parseInt(recipeNoList.get(i)));
 			 
 			 HashMap<String, Object> map=new HashMap<String, Object>();
 	         map.put("rvo",rvo);
@@ -528,53 +536,41 @@ public class RecipeServiceImpl implements RecipeService{
 		return fileLastNamePath;
 	}
 	/**
-	 * 닉네임으로 해당 댓글의 모든 commentNo를 
-	 * 받아온다
+	 * 레시피 관련 테이블 정보 삭제
+	 * 좋아요/싫어요,즐겨찾기,레시피 댓글
+	 * @param recipeNo
 	 */
 	@Override
-	public List<Integer> getMyCommentNoListByNick(String nick) {
-		return recipeDAO.getMyCommentNoListByNick(nick);
+	public void deleteRecipeRelationInfo(int recipeNo) {
+		int gnBNoAllCount=recipeDAO.getGoodAndBadNoCountByRecipeNo(recipeNo);
+		int favoriteNoAllCount=recipeDAO.getFavoriteNoAllList(recipeNo);
+		int recipeCommentNoAllCount=recipeCommentService.getCountOfCommentByRecipeNo(recipeNo);
+		recipeDAO.deleteRecipeFile(recipeNo);
+		recipeDAO.deleteRecipeItem(recipeNo);
+		if(gnBNoAllCount!=0){
+			recipeDAO.deleteGoodAndBad(recipeNo);
+		}
+		if(favoriteNoAllCount!=0){
+			recipeDAO.deleteFavorites(recipeNo);
+		}
+		if(recipeCommentNoAllCount!=0){
+			recipeCommentService.deleteRecipeCommentByRecipeNo(recipeNo);
+		}
 	}
 	/**
-	 * commentNo를 이용
-	 * 정보를 삭제
+	 * 레시피 번호 이용
+	 * 해당 레시피 정보 삭제
+	 * @param recipeNo
 	 */
 	@Override
-	public void deleteAllRecipeCommentByCommnetNo(int commentNo) {
-		recipeDAO.deleteRecipeCommentByCommentNo(commentNo);
+	public void deleteRecipe(int recipeNo) {
+	recipeDAO.deleteRecipe(recipeNo);	
 	}
 	/**
-	 * 아이디 이용
-	 * 해당 gnb no리스트 받아온다
+	 * 회원 정보 수정시
+	 * 아이디를 이용 해당 아이디로 작성된 레시피 번호를 찾은 다음
+	 * 레시피의 닉네임 정보 변경
 	 */
-	@Override
-	public List<Integer> getMyGoodAndBadN0List(String id) {
-		return recipeDAO.getMyGoodAndBadN0List(id);
-	}
-	/**
-	 * 아이디 이용
-	 * 해당 추천 번호 리스트를 받아온다
-	 */
-	@Override
-	public List<Integer> getMyFavoriteNoList(String id) {
-		return recipeDAO.getMyFavoriteNoList(id);
-	}
-	/**
-	 * 아이디이용
-	 * 등록한 추천 비추천 삭제
-	 */
-	@Override
-	public void deleteGoobAndBadAll(int gnbNo) {
-	  recipeDAO.deleteGoobAndBadAll(gnbNo);
-	};
-	/**
-	 * 등록한 즐겨찾기 삭제
-	 */
-	@Override
-	public void deletefavoriteAll(int favoriteNo) {
-		recipeDAO.deletefavoriteAll(favoriteNo);
-	}
-
 	@Override
 	public void updateRecipeNickName(MemberVO vo) {
 		List<String> recipeNoList=recipeDAO.getMyRecipeList(vo.getId());
@@ -590,8 +586,39 @@ public class RecipeServiceImpl implements RecipeService{
 	}
 
 	@Override
-	public List<String> getItamListByPart(String value) {		
-		return recipeDAO.getItamListByPart(value);	
+	public List<String> getItemListByPart(String value) {		
+		return recipeDAO.getItemListByPart(value);	
+	}
+	/**
+	 * 아이디 이용
+	 * 해당 gnb no리스트 받아온다
+	 */
+	@Override
+	public List<Integer> getMyGoodAndBadNoList(String id) {
+		return recipeDAO.getMyGoodAndBadNoList(id);
+	}
+	/**
+	 * 아이디이용
+	 * 등록한 추천 비추천 삭제
+	 */
+	@Override
+	public void deleteGoobAndBadAll(int gnbNo) {
+		recipeDAO.deleteGoobAndBadAll(gnbNo);
+	}
+	/**
+	 * 아이디 이용
+	 * 해당 추천 번호 리스트를 받아온다
+	 */
+	@Override
+	public List<Integer> getMyFavoriteNoList(String id) {
+		return recipeDAO.getMyFavoriteNoList(id);
+	}
+	/**
+	 * 등록한 즐겨찾기 삭제
+	 */
+	@Override
+	public void deleteFavoriteAll(int favoriteNo) {
+		recipeDAO.deletefavoriteAll(favoriteNo);
 	};
 	
 	

@@ -11,9 +11,6 @@ import org.springframework.stereotype.Repository;
 public class MemberDAOImpl implements MemberDAO {
    @Resource
    private SqlSessionTemplate sqlSessionTemplate;
-   /* (non-Javadoc)
-    * @see org.dedeplz.fridge.model.MemberDAO#allMember()
-    */
    /**
     * 아이디 찾기
     */

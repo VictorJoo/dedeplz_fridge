@@ -1,6 +1,5 @@
 package org.dedeplz.fridge.controller.recipe;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -12,8 +11,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.servlet.http.Cookie;
@@ -21,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.dedeplz.fridge.model.common.FileManager;
 import org.dedeplz.fridge.model.common.LoginCheck;
 import org.dedeplz.fridge.model.member.MemberVO;
 import org.dedeplz.fridge.model.recipe.FavoriteVO;
@@ -28,7 +26,6 @@ import org.dedeplz.fridge.model.recipe.FileVO;
 import org.dedeplz.fridge.model.recipe.RecipeService;
 import org.dedeplz.fridge.model.recipe.RecipeVO;
 import org.dedeplz.fridge.model.recipe.paging.FavoriteListVO;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -49,12 +46,11 @@ import org.springframework.web.servlet.ModelAndView;
 public class RecipeController {
 	@Resource(name = "recipeServiceImpl")
 	private RecipeService recipeService;
-	
-	@Resource(name = "uploadPath")
-	private String path;
+	@Resource
+	private FileManager fileManager;
 	/**
-	 * 메인 페이지에 레시피 마지막 사진을 전송
-	 * 
+	 * 메인 페이지에 모든 레시피 마지막 사진과 관련 정보(작성자정보, 좋아요 수,댓글 수) 를 보낸다
+	 * 탑3에 해당하는 레시피 정보를 보낸다
 	 * @param pageNo
 	 * @return
 	 */
@@ -63,12 +59,11 @@ public class RecipeController {
 		// 전체 레시피 리스트
 		List<String> recipeNoList = recipeService.getAllRecipeNo();
 		List<HashMap<String, Object>> fileLastNamePath = recipeService.getFileLastNamePath();
-		List<HashMap<String, Object>> topFileLastNamePath = recipeService	.getTopFileLastNamePath();
+		List<HashMap<String, Object>> topFileLastNamePath = recipeService.getTopFileLastNamePath();
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("recipeNoList", recipeNoList.size());
 		resultMap.put("filePath", fileLastNamePath);
 		resultMap.put("topFileInfo", topFileLastNamePath);
-		System.out.println(fileLastNamePath);
 		return new ModelAndView("home", "total", resultMap);
 	}
 
@@ -167,7 +162,7 @@ public class RecipeController {
 	public ModelAndView registerRecipe(RecipeVO rvo, String items) {
 		int recipeNo = 0;
 		String contents = rvo.getContents();
-		List<String> list = convertHtmlimg(contents);
+		List<String> list = fileManager.convertHtmlimg(contents);
 		List<FileVO> fvoList = new ArrayList<FileVO>();
 		for (String imgUrl : list) {
 			FileVO fvo = new FileVO();
@@ -219,7 +214,8 @@ public class RecipeController {
 	}
 
 	/**
-	 * 
+	 * 레시피 수정 폼으로 이동
+	 * 수정폼에서 필요한 정보 제공
 	 * @param rvo
 	 * @param model
 	 * @return
@@ -239,7 +235,8 @@ public class RecipeController {
 	 * @param response
 	 */
 	@LoginCheck
-	@RequestMapping(value = "multiplePhotoUpload.do", method = {	RequestMethod.GET, RequestMethod.POST })
+	@RequestMapping(value = "multiplePhotoUpload.do", method = {
+			RequestMethod.GET, RequestMethod.POST })
 	public void multiplePhotoUpload(HttpServletRequest request,
 			HttpServletResponse response, HttpSession session) {
 		MemberVO mvo = (MemberVO) session.getAttribute("mvo");
@@ -249,28 +246,21 @@ public class RecipeController {
 			// 파일명을 받는다 - 일반 원본파일명
 			String oriName = request.getHeader("file-name");
 			oriName = URLDecoder.decode(oriName, "UTF-8");
-			String destPath = path + mvo.getId() + "\\";
-			File file = new File(destPath);
-			if (!file.exists()) {
-				file.mkdirs();
-			}
+			System.out.println("oriName:"+oriName);
+			String destPath=fileManager.checkUploadPath(mvo.getId());
 			String fileName = "";
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmss");
 			String today = formatter.format(new java.util.Date());
 			fileName = today + UUID.randomUUID().toString()
 					+ oriName.substring(oriName.lastIndexOf("."));
+			System.out.println("fileName:"+fileName);
 			String filePath = destPath + fileName;
-			/**
-			 * recipe_file table에 입력
-			 */
-
-			/**
-			 * 서버에 파일쓰기
-			 */
+			System.out.println("filePath:"+filePath);
 			InputStream is = request.getInputStream();
 			OutputStream os = new FileOutputStream(filePath);
 			int numRead;
-			byte b[] = new byte[Integer.parseInt(request.getHeader("file-size"))];
+			byte b[] = new byte[Integer
+					.parseInt(request.getHeader("file-size"))];
 			while ((numRead = is.read(b, 0, b.length)) != -1) {
 				os.write(b, 0, numRead);
 			}
@@ -279,16 +269,11 @@ public class RecipeController {
 			}
 			os.flush();
 			os.close();
-			/**
-			 * path에 파일 저장
-			 */
-			/**
-			 * 정보 출력
-			 */
 			sFileInfo += "&bNewLine=true";
 			sFileInfo += "&sFileName=" + oriName;
-			sFileInfo += "&sFileURL=" + "/fridge_v0.1/photo_upload/"+ mvo.getId() + "/" + fileName;
+			sFileInfo += "&sFileURL=" + "/fridge_v0.1/photo_upload/" + mvo.getId()+ "/" + fileName;
 			PrintWriter print = response.getWriter();
+			System.out.println("sFileInfo:"+sFileInfo);
 			print.print(sFileInfo);
 			print.flush();
 			print.close();
@@ -296,23 +281,7 @@ public class RecipeController {
 			e.printStackTrace();
 		}
 	}
-
-	/**
-	 * java 정규 표현식을 이용한 java 이미지 태그 추출(이미지 저장 경로)
-	 * 
-	 * @param img
-	 * @return
-	 */
-	public static List<String> convertHtmlimg(String img) {
-		Pattern nonValidPattern = Pattern.compile("<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>");
-		List<String> result = new ArrayList<String>();
-		Matcher matcher = nonValidPattern.matcher(img);
-		while (matcher.find()) {
-			result.add(matcher.group(1));
-		}
-		return result;
-	}
-
+	
 	/**
 	 * 업데이트
 	 * 
@@ -324,7 +293,7 @@ public class RecipeController {
 	@RequestMapping("updateRecipe.do")
 	@Transactional
 	public ModelAndView updateRecipe(RecipeVO rvo, String items) {
-		List<String> list = convertHtmlimg(rvo.getContents());
+		List<String> list = fileManager.convertHtmlimg(rvo.getContents());
 		recipeService.updateRecipe(rvo);
 		List<FileVO> fvoList = new ArrayList<FileVO>();
 		for (String imgUrl : list) {
@@ -475,12 +444,16 @@ public class RecipeController {
 	public String recipeCommentForm() {
 		return "posting/commentRecipeForm";
 	}
-	
+	/**
+	 * 자동완성 미완
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("autocomplete.do")
 	@ResponseBody
 	public List<String> autocomplete(HttpServletRequest request){
 		String value = request.getParameter("value");
-		List<String> list = recipeService.getItamListByPart(value);
+		List<String> list = recipeService.getItemListByPart(value);
 		System.out.println(list);
 		return list;
 	}
